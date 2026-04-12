@@ -21,11 +21,13 @@ import { FlexiToastService } from 'flexi-toast';
 })
 export default class Login {
   readonly loading = signal<boolean>(false);
+
   readonly #http = inject(HttpService);
   readonly #router = inject(Router);
   readonly #toast = inject(FlexiToastService);
 
   readonly email = signal<string>("");
+  readonly passwordEl = viewChild<ElementRef<HTMLInputElement>>("passwordEl");
   readonly  closeBtn = viewChild<ElementRef<HTMLButtonElement>>("modalCloneBtn");
 
   login(form: NgForm) {
@@ -49,5 +51,14 @@ export default class Login {
       this.#toast.showToast("Başarılı",res, "info");
       this.closeBtn()!.nativeElement.click();
     });
+
+    
   }
+  
+  togglePasswordEl() {
+    this.passwordEl()?.nativeElement.type === 'password'
+      ? this.passwordEl()?.nativeElement.setAttribute('type', 'text')
+      : this.passwordEl()?.nativeElement.setAttribute('type', 'password');
+  }
+
 }

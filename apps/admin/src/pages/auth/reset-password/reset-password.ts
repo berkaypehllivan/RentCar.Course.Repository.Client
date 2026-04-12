@@ -76,6 +76,8 @@ export default class ResetPassword {
     return (this.passwordStrength().level / 4) * 100;
   });
 
+  readonly logoutAllDevices = signal<boolean>(true);
+
   readonly newPasswordEl =
     viewChild<ElementRef<HTMLInputElement>>('newPasswordEl');
   readonly confirmPasswordEl =
@@ -110,8 +112,9 @@ export default class ResetPassword {
   onSubmit(): void {
     if (this.isFormValid()) {
       const data = {
-        forgotPasswordId: this.id(),
+        forgotPasswordCode: this.id(),
         newPassword: this.password(),
+        logoutAllDevices: this.logoutAllDevices(),
       };
       this.loading.set(true);
       this.#http.post<string>('/rent/auth/reset-password', data, (res) => {
