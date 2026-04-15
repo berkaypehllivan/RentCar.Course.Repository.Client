@@ -14,6 +14,7 @@
           <p>Admin paneline erişim için giriş yapın</p>
         </div>
 
+        @if(!showTfaForm()){
         <form
           #form="ngForm"
           formValidate
@@ -35,7 +36,7 @@
                 class="form-control"
                 id="adminEmail"
                 name="emailOrUserName"
-                ngModel
+                [(ngModel)]="emailOrUserName"
                 placeholder="admin@rentcar.com"
                 required
               />
@@ -62,7 +63,8 @@
               <button
                 type="button"
                 class="input-group-text password-toggle"
-                data-target="adminPassword" (click)="togglePasswordEl()"
+                data-target="adminPassword"
+                (click)="togglePasswordEl()"
               >
                 @if(passwordEl.type === "password"){
                 <i class="bi bi-eye"></i>
@@ -134,6 +136,57 @@
             </div>
           </div>
         </form>
+        }@else{
+        <form
+          #form="ngForm"
+          formValidate
+          autocomplete="off"
+          class="login-form"
+          (ngSubmit)="loginWithTFA(form)"
+        >
+          <!-- Confirm Code Input -->
+          <div class="form-group">
+            <div class="d-flex justify-content-between">
+              <label for="tfaConfirmCode" class="form-label"
+                >Mail adresinize gönderilen TFA kodunu giriniz!</label
+              >
+              <b>{{time().min}} : {{time().sec.toString().length === 1 ? "0" + time().sec.toString() : time().sec}}</b>
+            </div>
+
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-lock me-2"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                id="tfaConfirmCode"
+                name="tfaConfirmCode"
+                [(ngModel)]="tfaConfirmCode"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Login Button -->
+          <button
+            type="submit"
+            class="btn btn-admin-primary w-100"
+            [disabled]="loading()"
+          >
+            @if(loading()){
+
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            }@else {
+            <i class="bi bi-shield-lock me-2"></i>
+            Giriş Yap }
+          </button>
+        </form>
+        }
 
         <!-- Footer Links -->
         <div class="login-footer">
