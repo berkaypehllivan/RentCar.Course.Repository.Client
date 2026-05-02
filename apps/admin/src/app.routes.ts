@@ -17,8 +17,12 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./pages/layouts/dashboard/dashboard'),
+        loadComponent: () => import('./pages/layouts/dashboard/dashboard')
       },
+      {
+        path:'branches',
+        loadChildren: () => import('./pages/branches/router')
+      }
     ],
   },
 ];

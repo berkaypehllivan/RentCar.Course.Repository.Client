@@ -1,0 +1,41 @@
+<grid
+  pageTitle="Şubeler"
+  endpoint="/rent/odata/branches"
+  addUrl="/branches/add"
+  editUrl="/branches/edit"
+  detailUrl="/branches/detail"
+  deleteEndpoint="/rent/branches"
+  [breadcrumbs]="breadcrumbs()"
+  commandColumnWidth="150px"
+  [showIndex]="true"
+>
+  <ng-template flexiGridCaptionCommandTemplate>
+    <flexi-button
+      btnColor="primary"
+      btnIcon="add"
+      title="Şube Ekle"
+      flexiTooltip
+      routerLink="/branches/add"
+    />
+  </ng-template>
+
+  <ng-template #commandTemplate>
+    <flexi-button btnColor="danger" title="Test" btnIcon="delete"/>
+  </ng-template>
+  <flexi-grid-column field="name" title="Şube Adı" />
+  <flexi-grid-column field="address.city" title="Şehir" />
+  <flexi-grid-column field="address.district" title="İlçe" />
+  <flexi-grid-column field="address.phoneNumber1" title="Telefon 1">
+    <ng-template flexiGridCellTemplate let-item>
+      <span>{{item.address.phoneNumber1 | mask:'(000) 000 00 00'}}</span>
+    </ng-template>
+  </flexi-grid-column>
+  <flexi-grid-column field="address.phoneNumber2" title="Telefon 2">
+    <ng-template flexiGridCellTemplate let-item>
+      @if(item.address.phoneNumber2){
+      <span>{{item.address.phoneNumber1 | mask:'(000) 000 00 00'}}</span>
+      }
+    </ng-template>
+  </flexi-grid-column>
+  <flexi-grid-column field="address.email" title="Mail Adresi" />
+</grid>

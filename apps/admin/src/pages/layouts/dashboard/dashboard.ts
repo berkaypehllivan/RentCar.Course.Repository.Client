@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { BreadcrumbService } from '../../../services/breadcrumb';
 import Blank from '../../../components/blank/blank';
-import { httpResource } from '@angular/common/http';
 
 @Component({
   imports: [Blank],
@@ -17,13 +16,8 @@ import { httpResource } from '@angular/common/http';
 })
 export default class Dashboard implements OnInit {
   readonly #breadcrumb = inject(BreadcrumbService);
-  readonly result = httpResource(() => '/rent/');
 
   ngOnInit(): void {
     this.#breadcrumb.SetDashboard();
-  }
-
-  makeRequest() {
-    this.result.reload();
   }
 }

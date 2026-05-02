@@ -5,7 +5,6 @@ import { ErrorService } from '../services/error';
 import { SKIP_ERROR_HANDLER } from '../app.config';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  debugger
   if(req.context.get(SKIP_ERROR_HANDLER)){
     return next(req);
   }

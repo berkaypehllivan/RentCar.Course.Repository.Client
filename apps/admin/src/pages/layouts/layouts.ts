@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnDestroy, OnInit, Renderer2, signal, ViewEncapsulation } from '@angular/core';
 import { NavigationModel, navigations } from '../../navigation';
 import { NgClass } from '@angular/common';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import Breadcrumb from './breadcrumb/breadcrumb';
 
 @Component({
-  imports: [NgClass,RouterLink,RouterOutlet,Breadcrumb],
+  imports: [NgClass,RouterLink,RouterLinkActive,RouterOutlet,Breadcrumb],
   templateUrl: './layouts.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
