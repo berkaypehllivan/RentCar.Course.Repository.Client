@@ -1,0 +1,24 @@
+<grid
+  pageTitle="Roller"
+  endpoint="/rent/odata/roles"
+  addUrl="/roles/add"
+  editUrl="/roles/edit"
+  detailUrl="/roles/detail"
+  deleteEndpoint="/rent/roles"
+  [breadcrumbs]="breadcrumbs()"
+  captionTitle="Rol Listesi"
+>
+  <flexi-grid-column field="name" title="Rol Adı" />
+  <flexi-grid-column field="permissionCount" title="İzin Sayısı" textAlign="right"/>
+
+  <ng-template #columnCommandTemplate let-item>
+    <flexi-button
+      btnColor="pink"
+      btnSize="small"
+      btnIcon="key"
+      title="İzinler"
+      flexiTooltip
+      [routerLink]="['/roles/permissions', item.id]"
+    />
+  </ng-template>
+</grid>

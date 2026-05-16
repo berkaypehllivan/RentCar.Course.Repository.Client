@@ -67,7 +67,7 @@ export class HttpService {
     callBack: (res: T) => void,
     errorCallBack?: (err: HttpErrorResponse) => void,
   ) {
-    this.#http.post<Result<T>>(endpoint, body, {
+    this.#http.put<Result<T>>(endpoint, body, {
         context: new HttpContext().set(SKIP_ERROR_HANDLER, true)
       }).subscribe({
       next: (res) => {
