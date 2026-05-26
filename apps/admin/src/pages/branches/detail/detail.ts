@@ -17,9 +17,10 @@ import { httpResource } from '@angular/common/http';
 import { Result } from '../../../models/result.model';
 import { BranchModel, initialBranch } from '../../../models/branch.model';
 import Blank from '../../../components/blank/blank';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
-  imports: [Blank],
+  imports: [Blank,NgxMaskPipe],
   templateUrl: './detail.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

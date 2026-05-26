@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   linkedSignal,
   resource,
@@ -14,27 +13,23 @@ import {
   BreadcrumbModel,
   BreadcrumbService,
 } from '../../../services/breadcrumb';
-import { ActivatedRoute, isActive, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { NgClass } from '@angular/common';
-import { BranchModel, initialBranch } from '../../../models/branch.model';
+import { initialUser, UserModel } from '../../../models/user.model';
 import { HttpService } from '../../../services/http';
 import { FlexiToastService } from 'flexi-toast';
-import { NgxMaskDirective } from 'ngx-mask';
 import { lastValueFrom } from 'rxjs';
 import { httpResource } from '@angular/common/http';
+import { ODataModel } from '../../../models/odata.model';
+import { BranchModel } from '../../../models/branch.model';
+import { RoleModel } from '../../../models/role.model';
 import { FlexiSelectModule } from 'flexi-select';
+import { Common } from '../../../services/common';
 
 @Component({
-  imports: [
-    Blank,
-    FormsModule,
-    FormValidateDirective,
-    NgClass,
-    NgxMaskDirective,
-    FlexiSelectModule,
-  ],
+  imports: [Blank, FormsModule, FormValidateDirective, NgClass,FlexiSelectModule],
   templateUrl: './create.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,15 +39,15 @@ export default class Create {
 
   readonly breadcrumbs = signal<BreadcrumbModel[]>([
     {
-      title: 'Şubeler',
-      icon: 'bi-buildings',
-      url: '/branches',
+      title: 'Kullanıcılar',
+      icon: 'bi-people',
+      url: '/users',
       isActive: true,
     },
   ]);
 
   readonly pageTitle = computed(() =>
-    this.id() ? 'Şube Güncelle' : 'Şube Ekle',
+    this.id() ? 'Kullanıcı Güncelle' : 'Kullanıcı Ekle',
   );
   readonly pageIcon = computed(() => (this.id() ? 'bi-pen' : 'bi-plus'));
   readonly btnName = computed(() => (this.id() ? 'Güncelle' : 'Kaydet'));
@@ -60,15 +55,15 @@ export default class Create {
     params: () => this.id(),
     loader: async () => {
       var res = await lastValueFrom(
-        this.#http.getResource<BranchModel>(`/rent/branches/${this.id()}`),
+        this.#http.getResource<UserModel>(`/rent/users/${this.id()}`),
       );
 
       this.breadcrumbs.update((prev) => [
         ...prev,
         {
-          title: res.data!.name,
+          title: res.data!.fullName,
           icon: 'bi-pen',
-          url: `/branches/edit/${this.id()}`,
+          url: `/users/edit/${this.id()}`,
           isActive: true,
         },
       ]);
@@ -77,20 +72,26 @@ export default class Create {
     },
   });
 
-  readonly data = linkedSignal(
-    () => this.result.value() ?? { ...initialBranch },
-  );
+  readonly data = linkedSignal(() => this.result.value() ?? { ...initialUser });
   readonly loading = linkedSignal(() => this.result.isLoading());
-  readonly ilResult = httpResource<any[]>(() => '/il-ilce.json');
-  readonly ilLoading = computed(() => this.ilResult.isLoading());
-  readonly iller = computed(() => this.ilResult.value() ?? []);
-  readonly ilceler = signal<any[]>([]);
+  readonly branchResult = httpResource<ODataModel<BranchModel>>(
+    () => '/rent/odata/branches',
+  );
+  readonly branches = computed(() => this.branchResult.value()?.value ?? []);
+  readonly branchLoading = computed(() => this.branchResult.isLoading());
+
+  readonly roleResult = httpResource<ODataModel<RoleModel>>(
+    () => '/rent/odata/roles',
+  );
+  readonly roles = computed(() => this.roleResult.value()?.value ?? []);
+  readonly roleLoading = computed(() => this.roleResult.isLoading());
 
   readonly #breadcrumb = inject(BreadcrumbService);
   readonly #activated = inject(ActivatedRoute);
   readonly #http = inject(HttpService);
   readonly #toast = inject(FlexiToastService);
   readonly #router = inject(Router);
+  readonly #common = inject(Common);
 
   constructor() {
     this.#activated.params.subscribe((res) => {
@@ -102,19 +103,13 @@ export default class Create {
           {
             title: 'Ekle',
             icon: 'bi-plus',
-            url: '/branches/add',
+            url: '/users/add',
             isActive: true,
           },
         ]);
         this.#breadcrumb.Reset(this.breadcrumbs());
       }
     });
-
-    effect(() => {
-      if(this.data().address.city){
-        this.getIlceler();
-      }
-    })
   }
 
   save(form: NgForm) {
@@ -123,11 +118,11 @@ export default class Create {
     if (!this.id()) {
       this.loading.set(true);
       this.#http.post<string>(
-        '/rent/branches',
+        '/rent/users',
         this.data(),
         (res) => {
           this.#toast.showToast('Başarılı', res, 'success');
-          this.#router.navigateByUrl('/branches');
+          this.#router.navigateByUrl('/users');
           this.loading.set(false);
         },
         () => this.loading.set(false),
@@ -135,11 +130,11 @@ export default class Create {
     } else {
       this.loading.set(true);
       this.#http.put<string>(
-        '/rent/branches',
+        '/rent/users',
         this.data(),
         (res) => {
           this.#toast.showToast('Başarılı', res, 'info');
-          this.#router.navigateByUrl('/branches');
+          this.#router.navigateByUrl('/users');
           this.loading.set(false);
         },
         () => this.loading.set(false),
@@ -154,8 +149,7 @@ export default class Create {
     }));
   }
 
-  getIlceler() {
-    const il = this.iller().find((i) => i.il_adi === this.data().address.city);
-    this.ilceler.set(il.ilceler);
+  checkIsAdmin(){
+    return this.#common.decode().role === "sys_admin";
   }
 }

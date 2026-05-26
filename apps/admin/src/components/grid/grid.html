@@ -7,7 +7,6 @@
   language="tr"
   [showCaption]="true"
   [captionTitle]="captionTitle()"
-  captionTitle="Şube Listesi"
   [customColumns]="columns()"
   (dataStateChange)="dataStateChange($event)"
   [commandColumnWidth]="commandColumnWidth()"
@@ -16,14 +15,16 @@
   <ng-template flexiGridCaptionCommandTemplate>
     @if(commandTemplateRef() !== undefined){
     <ng-container *ngTemplateOutlet="commandTemplateRef()!;"></ng-container>
-    }
+    } @if(checkPermission(addOptions().permission)){
+
     <flexi-button
       btnColor="primary"
       btnIcon="add"
       title="Ekle"
       flexiTooltip
-      [routerLink]="this.addUrl()"
+      [routerLink]="this.addOptions().url"
     />
+    }
   </ng-template>
 
   <ng-content />
@@ -58,23 +59,25 @@
     <ng-container
       *ngTemplateOutlet="columnCommandTemplateRef()!; context:{$implicit: item}"
     ></ng-container>
-    
+    } @if(checkPermission(detailOptions().permission)){
     <flexi-button
       btnColor="indigo"
       btnIcon="zoom_in"
       title="Detay"
       btnSize="small"
       flexiTooltip
-      [routerLink]="[this.detailUrl(),item.id]"
+      [routerLink]="[this.detailOptions().url,item.id]"
     />
+    } @if(checkPermission(editOptions().permission)){
     <flexi-button
       btnColor="info"
       btnIcon="edit"
       title="Güncelle"
       btnSize="small"
       flexiTooltip
-      [routerLink]="[this.editUrl(),item.id]"
+      [routerLink]="[this.editOptions().url,item.id]"
     />
+    } @if(checkPermission(deleteOptions().permission)){
     <flexi-button
       btnColor="danger"
       btnIcon="delete"

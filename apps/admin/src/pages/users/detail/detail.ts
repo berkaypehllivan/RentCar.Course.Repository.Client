@@ -14,7 +14,7 @@ import {
 } from '../../../services/breadcrumb';
 import { httpResource } from '@angular/common/http';
 import { Result } from '../../../models/result.model';
-import { RoleModel, initialRole } from '../../../models/role.model';
+import { UserModel, initialUser } from '../../../models/user.model';
 import Blank from '../../../components/blank/blank';
 import { NgxMaskPipe } from 'ngx-mask';
 
@@ -31,12 +31,12 @@ export default class Detail {
   readonly #activated = inject(ActivatedRoute);
   readonly #breadcrumb = inject(BreadcrumbService);
 
-  readonly result = httpResource<Result<RoleModel>>(
-    () => `/rent/roles/${this.id()}`,
+  readonly result = httpResource<Result<UserModel>>(
+    () => `/rent/Users/${this.id()}`,
   );
-  readonly data = computed(() => this.result.value()?.data ?? initialRole);
+  readonly data = computed(() => this.result.value()?.data ?? initialUser);
   readonly loading = computed(() => this.result.isLoading());
-  readonly pageTitle = computed(() => this.data()?.name ?? 'Rol Detay');
+  readonly pageTitle = computed(() => this.data()?.firstName + " " + this.data()?.lastName);
 
   constructor() {
     this.#activated.params.subscribe((res) => {
@@ -46,9 +46,9 @@ export default class Detail {
     effect(() => {
       const breadcrumbs: BreadcrumbModel[] = [
         {
-          title: 'Roller',
-          icon: 'bi-clipboard2-check',
-          url: '/roles',
+          title: 'Kullanıcılar',
+          icon: 'bi-people',
+          url: '/Users',
           isActive: true,
         },
       ];
@@ -59,9 +59,9 @@ export default class Detail {
         this.breadcrumbs.update((prev) => [
           ...prev,
           {
-            title: this.data().name,
+            title: this.data().fullName,
             icon: 'bi-zoom-in',
-            url: `/roles/edit/${this.id()}`,
+            url: `/Users/edit/${this.id()}`,
             isActive: true,
           },
         ]);

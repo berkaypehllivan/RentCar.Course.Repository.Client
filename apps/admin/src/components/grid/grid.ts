@@ -24,6 +24,12 @@ import { FlexiToastService } from 'flexi-toast';
 import { HttpService } from '../../services/http';
 import { BreadcrumbModel, BreadcrumbService } from '../../services/breadcrumb';
 import { NgTemplateOutlet } from '@angular/common';
+import { Common } from '../../services/common';
+
+export interface btnOptions {
+  url: string;
+  permission: string;
+}
 
 @Component({
   selector: 'grid',
@@ -36,10 +42,10 @@ export default class Grid implements AfterViewInit {
   readonly pageTitle = input.required<string>();
   readonly endpoint = input.required<string>();
   readonly showAudit = input<boolean>(true);
-  readonly addUrl = input.required<string>();
-  readonly editUrl = input.required<string>();
-  readonly detailUrl = input.required<string>();
-  readonly deleteEndpoint = input.required<string>();
+  readonly addOptions = input.required<btnOptions>();
+  readonly editOptions = input.required<btnOptions>();
+  readonly detailOptions = input.required<btnOptions>();
+  readonly deleteOptions = input.required<btnOptions>();
   readonly breadcrumbs = input.required<BreadcrumbModel[]>();
   readonly commandColumnWidth = input<string>('150px');
   readonly showIndex = input<boolean>(true);
@@ -71,6 +77,7 @@ export default class Grid implements AfterViewInit {
   readonly #http = inject(HttpService);
   readonly #toast = inject(FlexiToastService);
   readonly #grid = inject(FlexiGridService);
+  readonly #common = inject(Common);
 
   ngAfterViewInit(): void {
     this.#breadcrumb.Reset(this.breadcrumbs());
@@ -86,7 +93,7 @@ export default class Grid implements AfterViewInit {
       'Kaydı silmek istiyor musunuz?',
       'Sil',
       () => {
-        this.#http.delete(`${this.deleteEndpoint()}/${id}`, (res) => {
+        this.#http.delete(`${this.deleteOptions().url}/${id}`, (res) => {
           this.#toast.showToast(
             'Başarılı',
             'Kayıt silme işlemi başarılı',
@@ -96,5 +103,9 @@ export default class Grid implements AfterViewInit {
         });
       },
     );
+  }
+
+  checkPermission(permission: string) {
+    return this.#common.checkPermission(permission);
   }
 }

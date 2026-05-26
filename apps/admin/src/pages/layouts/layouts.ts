@@ -1,23 +1,42 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnDestroy, OnInit, Renderer2, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { NavigationModel, navigations } from '../../navigation';
 import { NgClass } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import Breadcrumb from './breadcrumb/breadcrumb';
+import { Common } from '../../services/common';
 
 @Component({
-  imports: [NgClass,RouterLink,RouterLinkActive,RouterOutlet,Breadcrumb],
+  imports: [NgClass, RouterLink, RouterLinkActive, RouterOutlet, Breadcrumb],
   templateUrl: './layouts.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class Layouts implements OnInit, OnDestroy {
-
   private resizeTimer: any;
   public readonly navigations = signal<NavigationModel[]>(navigations);
+  readonly decode = computed(() => this.#common.decode());
 
   readonly #elementRef = inject(ElementRef);
   readonly #renderer = inject(Renderer2);
   readonly #router = inject(Router);
+  readonly #common = inject(Common);
 
   ngOnInit(): void {
     this.initializeSidebar();
@@ -32,11 +51,10 @@ export default class Layouts implements OnInit, OnDestroy {
     }
   }
 
-  logout(){
+  logout() {
     localStorage.clear();
-    this.#router.navigateByUrl("/login");
+    this.#router.navigateByUrl('/login');
   }
-
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: any): void {
@@ -47,8 +65,11 @@ export default class Layouts implements OnInit, OnDestroy {
   }
 
   private initializeSidebar(): void {
-    const sidebarToggle = this.#elementRef.nativeElement.querySelector('#sidebarToggle');
-    const mobileSidebarToggle = this.#elementRef.nativeElement.querySelector('.mobile-sidebar-toggle');
+    const sidebarToggle =
+      this.#elementRef.nativeElement.querySelector('#sidebarToggle');
+    const mobileSidebarToggle = this.#elementRef.nativeElement.querySelector(
+      '.mobile-sidebar-toggle',
+    );
 
     if (sidebarToggle) {
       this.#renderer.listen(sidebarToggle, 'click', () => {
@@ -64,7 +85,8 @@ export default class Layouts implements OnInit, OnDestroy {
   }
 
   private initializeSubmenus(): void {
-    const menuItems = this.#elementRef.nativeElement.querySelectorAll('.menu-item');
+    const menuItems =
+      this.#elementRef.nativeElement.querySelectorAll('.menu-item');
 
     menuItems.forEach((item: HTMLElement) => {
       const menuLink = item.querySelector('.menu-link');
@@ -81,7 +103,9 @@ export default class Layouts implements OnInit, OnDestroy {
 
   private setActiveMenuItem(): void {
     const currentPath = window.location.pathname;
-    const menuLinks = this.#elementRef.nativeElement.querySelectorAll('.menu-link, .submenu a');
+    const menuLinks = this.#elementRef.nativeElement.querySelectorAll(
+      '.menu-link, .submenu a',
+    );
 
     menuLinks.forEach((link: HTMLElement) => {
       const href = link.getAttribute('href');
@@ -96,9 +120,15 @@ export default class Layouts implements OnInit, OnDestroy {
             const parentItem = parentSubmenu.closest('.menu-item');
             if (parentItem) {
               this.#renderer.addClass(parentItem, 'open');
-              const submenu = parentItem.querySelector('.submenu') as HTMLElement;
+              const submenu = parentItem.querySelector(
+                '.submenu',
+              ) as HTMLElement;
               if (submenu) {
-                this.#renderer.setStyle(submenu, 'maxHeight', submenu.scrollHeight + 'px');
+                this.#renderer.setStyle(
+                  submenu,
+                  'maxHeight',
+                  submenu.scrollHeight + 'px',
+                );
               }
             }
           }
@@ -110,9 +140,15 @@ export default class Layouts implements OnInit, OnDestroy {
   private loadSidebarState(): void {
     const savedState = localStorage.getItem('sidebarCollapsed');
     const sidebar = this.#elementRef.nativeElement.querySelector('#sidebar');
-    const mainWrapper = this.#elementRef.nativeElement.querySelector('.main-wrapper');
+    const mainWrapper =
+      this.#elementRef.nativeElement.querySelector('.main-wrapper');
 
-    if (savedState === 'true' && window.innerWidth > 992 && sidebar && mainWrapper) {
+    if (
+      savedState === 'true' &&
+      window.innerWidth > 992 &&
+      sidebar &&
+      mainWrapper
+    ) {
       this.#renderer.addClass(sidebar, 'collapsed');
       this.#renderer.setStyle(mainWrapper, 'marginLeft', '70px');
     }
@@ -120,7 +156,8 @@ export default class Layouts implements OnInit, OnDestroy {
 
   private toggleSidebar(): void {
     const sidebar = this.#elementRef.nativeElement.querySelector('#sidebar');
-    const mainWrapper = this.#elementRef.nativeElement.querySelector('.main-wrapper');
+    const mainWrapper =
+      this.#elementRef.nativeElement.querySelector('.main-wrapper');
 
     if (!sidebar || !mainWrapper) return;
 
@@ -143,7 +180,8 @@ export default class Layouts implements OnInit, OnDestroy {
     if (!sidebar) return;
 
     const isShowing = sidebar.classList.contains('show');
-    let backdrop = this.#elementRef.nativeElement.querySelector('.sidebar-backdrop');
+    let backdrop =
+      this.#elementRef.nativeElement.querySelector('.sidebar-backdrop');
 
     if (isShowing) {
       this.#renderer.removeClass(sidebar, 'show');
@@ -167,7 +205,10 @@ export default class Layouts implements OnInit, OnDestroy {
     }
   }
 
-  private toggleSubmenu(item: HTMLElement, allMenuItems: NodeListOf<Element>): void {
+  private toggleSubmenu(
+    item: HTMLElement,
+    allMenuItems: NodeListOf<Element>,
+  ): void {
     const submenu = item.querySelector('.submenu') as HTMLElement;
     if (!submenu) return;
 
@@ -190,13 +231,18 @@ export default class Layouts implements OnInit, OnDestroy {
       this.#renderer.setStyle(submenu, 'maxHeight', '0');
     } else {
       this.#renderer.addClass(item, 'open');
-      this.#renderer.setStyle(submenu, 'maxHeight', submenu.scrollHeight + 'px');
+      this.#renderer.setStyle(
+        submenu,
+        'maxHeight',
+        submenu.scrollHeight + 'px',
+      );
     }
   }
 
   private handleWindowResize(): void {
     const sidebar = this.#elementRef.nativeElement.querySelector('#sidebar');
-    const mainWrapper = this.#elementRef.nativeElement.querySelector('.main-wrapper');
+    const mainWrapper =
+      this.#elementRef.nativeElement.querySelector('.main-wrapper');
 
     if (!sidebar || !mainWrapper) return;
 
@@ -225,4 +271,7 @@ export default class Layouts implements OnInit, OnDestroy {
     console.log('Notification:', message);
   }
 
+  checkPermission(permission: string) {
+    return this.#common.checkPermission(permission);
+  }
 }

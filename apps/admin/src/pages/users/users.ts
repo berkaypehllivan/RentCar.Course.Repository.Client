@@ -1,28 +1,21 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-  ViewEncapsulation,
-} from '@angular/core';
-import { BreadcrumbModel } from '../../services/breadcrumb';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { FlexiGridModule } from 'flexi-grid';
-import Grid from '../../components/grid/grid';
-import { RouterLink } from '@angular/router';
+import { BreadcrumbModel } from '../../services/breadcrumb';
 import { Common } from '../../services/common';
+import Grid from '../../components/grid/grid';
 
 @Component({
-  imports: [Grid, FlexiGridModule, RouterLink],
-  templateUrl: './roles.html',
+  imports: [Grid,FlexiGridModule],
+  templateUrl: './users.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class Roles {
   readonly breadcrumbs = signal<BreadcrumbModel[]>([
     {
-      title: 'Roller',
-      icon: 'bi-clipboard2-check',
-      url: '/roles',
+      title: 'Kullanıcılar',
+      icon: 'bi-people',
+      url: '/users',
       isActive: true,
     },
   ]);
