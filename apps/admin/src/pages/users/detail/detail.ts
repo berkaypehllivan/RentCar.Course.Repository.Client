@@ -48,7 +48,7 @@ export default class Detail {
         {
           title: 'Kullanıcılar',
           icon: 'bi-people',
-          url: '/Users',
+          url: '/users',
           isActive: true,
         },
       ];
