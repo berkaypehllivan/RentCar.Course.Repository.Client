@@ -21,6 +21,18 @@ export const navigations: NavigationModel[] = [
     permission: 'branch:view',
   },
   {
+    title: 'Kategoriler',
+    url: '/categories',
+    icon: 'bi-tags',
+    permission: 'category:view',
+  },
+  {
+    title: 'Koruma Paketleri',
+    url: '/protection-packages',
+    icon: 'bi-shield-check',
+    permission: 'protection_package:view',
+  },
+  {
     title: 'Roller',
     url: '/roles',
     icon: 'bi-clipboard2-check',

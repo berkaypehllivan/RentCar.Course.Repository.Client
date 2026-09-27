@@ -37,6 +37,14 @@ loadComponent:() => import('./pages/unauthorized/unauthorized'),
       {
         path: 'users',
         loadChildren: () => import('./pages/users/router')
+      },
+      {
+        path: 'categories',
+        loadChildren: () => import('./pages/categories/router')
+      },
+      {
+        path: 'protection-packages',
+        loadChildren: () => import('./pages/protection-packages/router')
       }
     ],
   },
