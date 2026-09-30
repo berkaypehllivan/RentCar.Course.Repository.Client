@@ -40,9 +40,7 @@ export default class Detail {
     () => this.result.value()?.data ?? initialProtectionPackageModel,
   );
   readonly loading = computed(() => this.result.isLoading());
-  readonly pageTitle = computed(
-    () => this.data()?.name ?? 'Koruma Paketi Detay',
-  );
+  readonly pageTitle = signal<string>("Koruma Paketi Detay");
 
   constructor() {
     this.#activated.params.subscribe((res) => {

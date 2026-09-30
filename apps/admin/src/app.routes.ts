@@ -45,7 +45,12 @@ loadComponent:() => import('./pages/unauthorized/unauthorized'),
       {
         path: 'protection-packages',
         loadChildren: () => import('./pages/protection-packages/router')
+      },
+      {
+        path: 'extra',
+        loadChildren: () => import('./pages/extra/router')
       }
+      
     ],
   },
 ];
