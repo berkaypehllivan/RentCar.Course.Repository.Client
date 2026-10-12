@@ -1,0 +1,560 @@
+<blank
+  [pageTitle]="pageTitle()"
+  [pageIcon]="pageIcon()"
+  (changeStatusEvent)="changeStatus($event)"
+  [status]="data().isActive"
+  [loading]="loading()"
+  size="col-md-10"
+>
+  <form #form="ngForm" formValidate class="admin-form" (ngSubmit)="save(form)">
+    <div class="row g-4">
+      <!-- Sol Kolon -->
+      <div class="col-lg-8">
+        <!-- Temel Bilgiler -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-info-circle text-primary me-2"></i>Temel Bilgiler
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6 form-group">
+                <label>Marka (*)</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="data().brand"
+                  name="brand"
+                  required
+                >
+                  <option value="">Marka seçiniz</option>
+                  @for (b of brands(); track b) {
+                  <option [value]="b">{{ b }}</option>
+                  }
+                </select>
+                <div class="invalid-feedback">Marka seçiniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Model (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Örn: 320i, C180, Egea"
+                  [(ngModel)]="data().model"
+                  name="model"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir model giriniz!</div>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Model Yılı (*)</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="data().modelYear"
+                  name="modelYear"
+                  required
+                >
+                  <option [ngValue]="0">Model yılı seçiniz</option>
+                  @for (y of modelYears(); track y) {
+                  <option [ngValue]="y">{{ y }}</option>
+                  }
+                </select>
+                <div class="invalid-feedback">Model yılı seçiniz!</div>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Renk</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="data().color"
+                  name="color"
+                >
+                  <option value="">Renk seçiniz</option>
+                  @for (c of colors(); track c) {
+                  <option [value]="c">{{ c }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Plaka (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="34 ABC 123"
+                  [(ngModel)]="data().plate"
+                  name="plate"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir plaka giriniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Şube</label>
+                <flexi-select
+                  [data]="branches()"
+                  label="name"
+                  value="id"
+                  [(ngModel)]="data().branchId"
+                  name="branchId"
+                  language="tr"
+                  placeholder="Şube seçiniz"
+                  [loading]="branchesResource.isLoading()"
+                />
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Kategori</label>
+                <flexi-select
+                  [data]="categories()"
+                  label="name"
+                  value="id"
+                  [(ngModel)]="data().categoryId"
+                  name="categoryId"
+                  language="tr"
+                  placeholder="Kategori seçiniz"
+                  [loading]="categoriesResource.isLoading()"
+                />
+              </div>
+              <div class="col-md-6 form-group">
+                <label>VIN Numarası</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="data().vinNumber"
+                  name="vinNumber"
+                />
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Motor Numarası</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="data().engineNumber"
+                  name="engineNumber"
+                />
+              </div>
+              <div class="col-12 form-group">
+                <label>Açıklama</label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  placeholder="Araç hakkında ek bilgiler..."
+                  [(ngModel)]="data().description"
+                  name="description"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teknik Özellikler -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-gear text-primary me-2"></i>Teknik Özellikler
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4 form-group">
+                <label>Yakıt Türü (*)</label>
+                <flexi-select
+                  [data]="fuelTypes()"
+                  label="name"
+                  value="value"
+                  [(ngModel)]="data().fuelType"
+                  name="fuelType"
+                  language="tr"
+                  placeholder="Yakıt türü seçiniz"
+                  [required]="true"
+                />
+                <div class="invalid-feedback">Yakıt türü seçiniz!</div>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Şanzıman (*)</label>
+                <flexi-select
+                  [data]="transmissions()"
+                  label="name"
+                  value="value"
+                  [(ngModel)]="data().transmission"
+                  name="transmission"
+                  language="tr"
+                  placeholder="Şanzıman seçiniz"
+                  [required]="true"
+                />
+                <div class="invalid-feedback">Şanzıman seçiniz!</div>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Kişi Kapasitesi (*)</label>
+                <flexi-select
+                  [data]="seatCounts()"
+                  label="name"
+                  value="value"
+                  [(ngModel)]="data().seatCount"
+                  name="seatCount"
+                  language="tr"
+                  placeholder="Kişi kapasitesi seçiniz"
+                  [required]="true"
+                />
+                <div class="invalid-feedback">Kişi kapasitesi seçiniz!</div>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Motor Hacmi (cc)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="1600"
+                  [(ngModel)]="data().engineVolume"
+                  name="engineVolume"
+                />
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Motor Gücü (HP)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="150"
+                  [(ngModel)]="data().enginePower"
+                  name="enginePower"
+                />
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Km</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="25000"
+                  [(ngModel)]="data().kilometer"
+                  name="kilometer"
+                />
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Çekiş Türü</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="data().tractionType"
+                  name="tractionType"
+                >
+                  <option value="">Çekiş türü seçiniz</option>
+                  @for (t of tractionTypes(); track t) {
+                  <option [value]="t">{{ t }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Yakıt Tüketimi (L/100km)</label>
+                <input
+                  type="text"
+                  step="0.1"
+                  class="form-control"
+                  [(ngModel)]="data().fuelConsumption"
+                  name="fuelConsumption"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Özellikler & Donanım -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-stars text-primary me-2"></i>Özellikler & Donanım
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              @for (group of featureGroups(); track group.group) {
+              <div class="col-md-6">
+                <h6 class="feature-group-title">{{ group.group }}</h6>
+                <div class="feature-switches">
+                  @for (f of group.features; track f.key) {
+                  <div
+                    class="form-check form-switch d-flex align-items-center mb-2"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [checked]="isFeatureSelected(f.key)"
+                      (change)="toggleFeature(f.key)"
+                      id="feature-{{f.key}}"
+                    />
+                    <label
+                      class="form-check-label ms-2"
+                      [for]="'feature-' + f.key"
+                    >
+                      <i class="bi {{f.icon}} me-1"></i> {{f.label}}
+                    </label>
+                  </div>
+                  }
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Fiyatlandırma & Sigorta -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-currency-dollar text-primary me-2"></i
+              >Fiyatlandırma
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4 form-group">
+                <label>Günlük Fiyat (TL) (*)</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="500"
+                    [(ngModel)]="data().dailyPrice"
+                    name="dailyPrice"
+                    required
+                  />
+                  <span class="input-group-text">₺</span>
+                </div>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Haftalık İndirim (%)</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="10"
+                    min="0"
+                    max="100"
+                    [(ngModel)]="data().weeklyDiscountRate"
+                    name="weeklyDiscountRate"
+                    required
+                  />
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Aylık İndirim (%)</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="20"
+                    min="0"
+                    max="100"
+                    [(ngModel)]="data().monthlyDiscountRate"
+                    name="monthlyDiscountRate"
+                    required
+                  />
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bakım -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-wrench text-primary me-2"></i>Bakım Bilgileri
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4 form-group">
+                <label>Son Bakım Tarihi</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="data().lastMaintanceDate"
+                  name="lastMaintanceDate"
+                  required
+                />
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Son Bakım KM</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="data().lastMaintanceKm"
+                  name="lastMaintanceKm"
+                  required
+                />
+              </div>
+              <div class="col-md-4 form-group">
+                <label>Sonraki Bakım KM</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="data().nextMaintanceKm"
+                  name="nextMaintanceKm"
+                  required
+                />
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Lastik Durumu</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="data().tireStatus"
+                  name="tireStatus"
+                  required
+                >
+                  <option value="">Lastik durumu seçiniz</option>
+                  @for (t of tireStatuses(); track t) {
+                  <option [value]="t">{{ t }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Genel Durum</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="data().generalStatus"
+                  name="generalStatus"
+                  required
+                >
+                  <option value="">Genel durum seçiniz</option>
+                  @for (g of (generalStatuses()); track g) {
+                  <option [value]="g">{{ g }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sigorta & Kasko -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-wrench text-primary me-2"></i>Sigorta & Kasko
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-3 form-group">
+                <label>Sigorta Türü</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="data().insuranceType"
+                  name="insuranceType"
+                  required
+                >
+                  <option value="">Sigorta türü seçiniz</option>
+                  @for (i of insuranceTypes(); track i) {
+                  <option [value]="i">{{ i }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-3 form-group">
+                <label>Muayene Tarihi</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="data().inspectionDate"
+                  name="inspectionDate"
+                  required
+                />
+              </div>
+              @if(data().insuranceType === 'Kasko & Sigorta'){
+              <div class="col-md-3 form-group">
+                <label>Kasko Bitiş</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="data().cascoEndDate"
+                  name="cascoEndDate"
+                  required
+                />
+              </div>
+              }
+              <div class="col-md-3 form-group">
+                <label>Sigorta Bitiş</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="data().insuranceEndDate"
+                  name="insuranceEndDate"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sağ Kolon: Araç Fotoğrafı -->
+      <div class="col-lg-4">
+        <div class="admin-card sticky-top">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-image text-primary me-2"></i>Araç Fotoğrafı
+              @if(!id()){ (*) }
+            </h6>
+          </div>
+          <div class="card-body text-center">
+            @if(imagePreview()){
+            <div class="car-image-large mb-3">
+              <img
+                [src]="imagePreview()"
+                alt="Araç fotoğrafı"
+                class="img-fluid rounded"
+                style="cursor: pointer"
+                (click)="fileInput.click()"
+              />
+            </div>
+            } @else {
+            <div
+              class="text-muted py-4 border rounded mb-3"
+              style="cursor: pointer; border-style: dashed !important"
+              (click)="fileInput.click()"
+            >
+              <i class="bi bi-cloud-arrow-up fs-1 d-block mb-2"></i>
+              Fotoğraf seçmek için tıklayın
+            </div>
+            }
+
+            <input
+              #fileInput
+              type="file"
+              class="d-none"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+            />
+
+            <div class="d-flex gap-2 justify-content-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="fileInput.click()"
+              >
+                <i class="bi bi-image me-1"></i>
+                {{ imagePreview() ? 'Resmi Değiştir' : 'Resim Seç' }}
+              </button>
+              @if(file()){
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                (click)="removeSelectedFile()"
+              >
+                <i class="bi bi-x-circle me-1"></i>Seçimi Kaldır
+              </button>
+              }
+            </div>
+            <small class="text-muted d-block mt-2"
+              >JPG, PNG veya WEBP yükleyebilirsiniz</small
+            >
+            @if(file()){
+            <small class="text-success d-block mt-1">{{ file()!.name }}</small>
+            }
+            <hr class="mt-4" />
+            <div class="d-grid">
+              <button class="btn btn-primary">
+                <i class="bi me-2" [ngClass]="pageIcon()"></i>
+                {{ btnName() }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</blank>

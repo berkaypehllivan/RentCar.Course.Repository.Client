@@ -5,8 +5,12 @@ import { Common } from './services/common';
 
 export const appRoutes: Route[] = [
   {
-path:'unauthorized',
-loadComponent:() => import('./pages/unauthorized/unauthorized'),
+    path: 'unauthorized',
+    loadComponent: () => import('./pages/unauthorize/unauthorize'),
+  },
+  {
+    path: 'unavailable',
+    loadComponent: () => import('./pages/unavailable/unavailable'),
   },
   {
     path: 'login',
@@ -24,33 +28,38 @@ loadComponent:() => import('./pages/unauthorized/unauthorized'),
       {
         path: '',
         loadComponent: () => import('./pages/layouts/dashboard/dashboard'),
-        canActivate: [() => inject(Common).checkPermissionForRoute('dashboard:view')]
+        canActivate: [
+          () => inject(Common).checkPermissionForRoute('dashboard:view'),
+        ],
       },
       {
-        path:'branches',
-        loadChildren: () => import('./pages/branches/router')
+        path: 'branches',
+        loadChildren: () => import('./pages/branches/router'),
       },
       {
         path: 'roles',
-        loadChildren: () => import('./pages/roles/router')
+        loadChildren: () => import('./pages/roles/router'),
       },
       {
         path: 'users',
-        loadChildren: () => import('./pages/users/router')
+        loadChildren: () => import('./pages/users/router'),
       },
       {
         path: 'categories',
-        loadChildren: () => import('./pages/categories/router')
+        loadChildren: () => import('./pages/categories/router'),
       },
       {
         path: 'protection-packages',
-        loadChildren: () => import('./pages/protection-packages/router')
+        loadChildren: () => import('./pages/protection-packages/router'),
       },
       {
         path: 'extra',
-        loadChildren: () => import('./pages/extra/router')
-      }
-      
+        loadChildren: () => import('./pages/extra/router'),
+      },
+      {
+        path: 'vehicles',
+        loadChildren: () => import('./pages/vehicles/router'),
+      },
     ],
   },
 ];
