@@ -29,8 +29,14 @@ export const navigations: NavigationModel[] = [
   {
     title: 'Kullanıcılar',
     url: '/users',
-    icon: 'bi-people',
+    icon: 'bi-person-gear',
     permission: 'user:view',
+  },
+  {
+    title: 'Müşteriler',
+    url: '/customers',
+    icon: 'bi-people',
+    permission: 'customer:view',
   },
   {
     title: 'Kategoriler',

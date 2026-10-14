@@ -1,0 +1,22 @@
+<grid
+  pageTitle="Müşteriler"
+  endpoint="/rent/odata/customers"
+  [addOptions]="{url: '/customers/add', permission: 'customer:create' }"
+  [editOptions]="{url: '/customers/edit', permission: 'customer:update'}"
+  [detailOptions]="{url: '/customers/detail', permission: 'customer:view'}"
+  [deleteOptions]="{url: '/customers', permission: 'customer:delete'}"
+  [breadcrumbs]="breadcrumbs()"
+  captionTitle="Müşteri Listesi"
+>
+  <flexi-grid-column field="firstName" title="Ad" />
+  <flexi-grid-column field="lastName" title="Soyad" />
+  <flexi-grid-column field="identityNumber" title="TC/Pasaport No" />
+  <flexi-grid-column field="email" title="E-Posta" />
+  <flexi-grid-column field="phoneNumber" title="Telefon No" />
+  <flexi-grid-column field="dateOfBirth" title="Doğum Tarihi" />
+  <flexi-grid-column
+    field="driverLicenceIssueDate"
+    title="Ehliyet Veriliş Tarihi"
+  />
+  <flexi-grid-column field="address" title="Adres" />
+</grid>

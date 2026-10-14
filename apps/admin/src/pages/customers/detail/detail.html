@@ -1,0 +1,53 @@
+<blank
+  [pageTitle]="pageTitle()"
+  pageIcon="bi-person-vcard"
+  [showStatusCheckbox]="false"
+  [showStatus]="true"
+  [status]="data().isActive"
+  [showAudit]="true"
+  [audit]="data()"
+  [loading]="loading()"
+  size="col-md-8"
+>
+  <div class="row g-4 justify-content-center">
+    <div class="col-12">
+      <!-- Kimlik Bilgileri -->
+      <div class="admin-card mb-4">
+        <div class="card-header">
+          <h6>
+            <i class="bi bi-person-badge text-primary me-2"></i>Kimlik Bilgileri
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6"><b>Ad:</b> {{data().firstName}}</div>
+            <div class="col-md-6"><b>Soyad:</b> {{data().lastName}}</div>
+            <div class="col-md-6"><b>TC / Pasaport No:</b> {{data().identityNumber}}</div>
+            <div class="col-md-6">
+              <b>Doğum Tarihi:</b> {{data().dateOfBirth | date:'dd.MM.yyyy'}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- İletişim & Ehliyet Bilgileri -->
+      <div class="admin-card mb-4">
+        <div class="card-header">
+          <h6>
+            <i class="bi bi-telephone text-primary me-2"></i>İletişim ve Ehliyet Bilgileri
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6"><b>E-Posta:</b> {{data().email}}</div>
+            <div class="col-md-6"><b>Telefon No:</b> {{data().phoneNumber}}</div>
+            <div class="col-md-12">
+              <b>Ehliyet Veriliş Tarihi:</b> {{data().driverLicenceIssueDate | date:'dd.MM.yyyy'}}
+            </div>
+            <div class="col-md-12"><b>Adres:</b> {{data().address}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</blank>

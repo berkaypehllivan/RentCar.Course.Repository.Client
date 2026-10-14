@@ -14,7 +14,7 @@ export default class Roles {
   readonly breadcrumbs = signal<BreadcrumbModel[]>([
     {
       title: 'Kullanıcılar',
-      icon: 'bi-people',
+      icon: 'bi-person-gear',
       url: '/users',
       isActive: true,
     },

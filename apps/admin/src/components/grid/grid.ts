@@ -25,7 +25,7 @@ import { HttpService } from '../../services/http';
 import { BreadcrumbModel, BreadcrumbService } from '../../services/breadcrumb';
 import { NgTemplateOutlet } from '@angular/common';
 import { Common } from '../../services/common';
-
+import { Title } from '@angular/platform-browser';
 export interface btnOptions {
   url: string;
   permission: string;
@@ -39,6 +39,7 @@ export interface btnOptions {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class Grid implements AfterViewInit {
+  readonly #title = inject(Title);
   readonly pageTitle = input.required<string>();
   readonly endpoint = input.required<string>();
   readonly showAudit = input<boolean>(true);
@@ -81,6 +82,7 @@ export default class Grid implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.#breadcrumb.Reset(this.breadcrumbs());
+    this.#title.setTitle(`RentCar | ${this.pageTitle()}`);
   }
 
   dataStateChange(state: StateModel) {

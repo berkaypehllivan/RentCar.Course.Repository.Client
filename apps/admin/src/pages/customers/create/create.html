@@ -1,0 +1,141 @@
+<blank
+  [pageTitle]="pageTitle()"
+  [pageIcon]="pageIcon()"
+  (changeStatusEvent)="changeStatus($event)"
+  [status]="data().isActive"
+  [loading]="loading()"
+  size="col-md-8" 
+>
+  <form #form="ngForm" formValidate class="admin-form" (ngSubmit)="save(form)">
+    <div class="row g-4 justify-content-center">
+      <div class="col-12">
+        <!-- Kimlik Bilgileri -->
+        <div class="admin-card mb-4">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-person-badge text-primary me-2"></i>Kimlik Bilgileri
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6 form-group">
+                <label>Ad (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Müşteri adı"
+                  [(ngModel)]="data().firstName"
+                  name="firstName"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir ad giriniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Soyad (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Müşteri soyadı"
+                  [(ngModel)]="data().lastName"
+                  name="lastName"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir soyad giriniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>TC / Pasaport No (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Kimlik Numarası"
+                  [(ngModel)]="data().identityNumber"
+                  name="identityNumber"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir kimlik numarası giriniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Doğum Tarihi (*)</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="data().dateOfBirth"
+                  name="dateOfBirth"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir doğum tarihi giriniz!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- İletişim & Ehliyet Bilgileri -->
+        <div class="admin-card mb-4">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-telephone text-primary me-2"></i>İletişim ve Ehliyet Bilgileri
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6 form-group">
+                <label>E-Posta (*)</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="ornek@mail.com"
+                  [(ngModel)]="data().email"
+                  name="email"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir e-posta adresi giriniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Telefon No (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="05xxxxxxxxx"
+                  [(ngModel)]="data().phoneNumber"
+                  name="phoneNumber"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir telefon numarası giriniz!</div>
+              </div>
+              <div class="col-md-12 form-group">
+                <label>Ehliyet Veriliş Tarihi (*)</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="data().driverLicenceIssueDate"
+                  name="driverLicenseIssueDate"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir ehliyet tarihi giriniz!</div>
+              </div>
+              <div class="col-12 form-group">
+                <label>Adres (*)</label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  placeholder="Tam adres giriniz..."
+                  [(ngModel)]="data().address"
+                  name="address"
+                  required
+                ></textarea>
+                <div class="invalid-feedback">Geçerli bir adres giriniz!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <button class="btn btn-primary">
+            <i class="bi me-2" [ngClass]="pageIcon()"></i>
+            {{ btnName() }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</blank>
