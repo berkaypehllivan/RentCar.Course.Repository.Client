@@ -54,9 +54,10 @@ export default class Blank {
   
 constructor() {
   effect(() => {
-    if(this.pageTitle){
-      this.#title.setTitle(`RentCar | ${this.pageTitle}`);
+    const title = this.pageTitle();
+    if(title){
+      this.#title.setTitle(`RentCar | ${title}`);
     }
-  });
+  })
 }
 }

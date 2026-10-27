@@ -9,9 +9,10 @@ import { FlexiGridModule } from 'flexi-grid';
 import Grid from '../../components/grid/grid';
 import { BreadcrumbModel } from '../../services/breadcrumb';
 import { Common } from '../../services/common';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
-  imports: [Grid, FlexiGridModule],
+  imports: [Grid, FlexiGridModule,NgxMaskPipe],
   templateUrl: './customers.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

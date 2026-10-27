@@ -3,6 +3,9 @@
   [total]="total()"
   [dataBinding]="true"
   [loading]="loading()"
+  [sort]="sort()"
+  [filter]="filter()"
+  (dataStateChange)="dataStateChange($event)"
   language="tr"
   [showCaption]="true"
   [captionTitle]="captionTitle()"
@@ -28,7 +31,7 @@
 
   <ng-content />
 
-  @if(showAudit()){
+  @if(showAudit()){ @if(showIsActive()){
 
   <flexi-grid-column
     field="isActive"
@@ -37,6 +40,7 @@
     [booleanData]="['Aktif','Pasif']"
     textAlign="center"
   />
+  }
   <flexi-grid-column
     field="createdAt"
     title="Oluşturulma Tarihi"

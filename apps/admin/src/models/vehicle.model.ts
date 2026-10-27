@@ -33,8 +33,8 @@ export interface VehicleModel extends EntityModel {
   tireStatus: string;
   generalStatus: string;
   features: string[];
-  branchName?:string;
-  categoryName?:string;
+  branchName: string;
+  categoryName: string;
 }
 
 export const initialVehicleModel: VehicleModel = {
@@ -45,7 +45,9 @@ export const initialVehicleModel: VehicleModel = {
   color: '',
   plate: '',
   categoryId: '',
+  categoryName: '',
   branchId: '',
+  branchName: '',
   vinNumber: '',
   engineNumber: '',
   description: '',

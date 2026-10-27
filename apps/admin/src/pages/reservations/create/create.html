@@ -1,0 +1,868 @@
+<blank
+  [pageTitle]="pageTitle()"
+  [pageIcon]="pageIcon()"
+  [showStatus]="false"
+  [loading]="loading()"
+  [showStatusCheckbox]="false"
+  size="col-md-12"
+>
+  <form #form="ngForm" formValidate class="admin-form" (ngSubmit)="save(form)">
+    <div class="row g-4">
+      <!-- Sol Kolon - Ana Form -->
+      <div class="col-lg-8">
+        <!-- Step 1: Müşteri Seçimi -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-person text-primary me-2"></i>1. Müşteri Bilgileri
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="customer-selection">
+              <div class="row g-3">
+                @if(selectedCustomer()) {
+                <ng-container *ngTemplateOutlet="customerCard" />
+                } @else{
+                <div class="mt-2">
+                  <flexi-grid
+                    [data]="customersData()"
+                    [total]="customersTotal()"
+                    [dataBinding]="true"
+                    commandColumnWidth="50px"
+                    language="tr"
+                    (dataStateChange)="customerDataStateChange($event)"
+                  >
+                    <flexi-grid-column field="fullName" title="Ad" />
+                    <flexi-grid-column field="lastName" title="Soyad" />
+                    <flexi-grid-column
+                      field="identityNumber"
+                      title="TC/Pasaport No"
+                    />
+                    <flexi-grid-column field="phoneNumber" title="Telefon No">
+                      <ng-template flexiGridCellTemplate let-item>
+                        <span
+                          >+90{{ item.phoneNumber | mask: '(000) 000 00 00'
+                          }}</span
+                        >
+                      </ng-template>
+                    </flexi-grid-column>
+                    <ng-template flexiGridColumnCommandTemplate let-item>
+                      <flexi-button
+                        btnColor="purple"
+                        btnSize="small"
+                        btnIcon="check"
+                        title="Seç"
+                        flexiTooltip
+                        (click)="selectCustomer(item)"
+                      />
+                    </ng-template>
+                  </flexi-grid>
+                </div>
+                <div class="col-12">
+                  <div class="new-customer-toggle d-flex justify-content-end">
+                    <button
+                      class="btn btn-primary"
+                      (click)="isCustomerPopupVisible = true"
+                    >
+                      <strong>Yeni Müşteri Oluştur</strong>
+                    </button>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Tarih ve Lokasyon -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-calendar-date text-primary me-2"></i>2. Tarih ve
+              Lokasyon
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              @if(isAdmin()){
+              <div class="col-md-12">
+                <label class="form-label">Teslim Alma Lokasyonu *</label>
+                <flexi-select
+                  [data]="branchesData()"
+                  label="name"
+                  value="id"
+                  [(ngModel)]="data().pickUpLocationId"
+                  (selected)="setLocation($event)"
+                  language="tr"
+                  name="pickUpLocationId"
+                  [required]="true"
+                />
+              </div>
+              }
+              <div class="col-md-6">
+                <label class="form-label">Teslim Alma Tarihi *</label>
+                <input
+                  type="date"
+                  [(ngModel)]="data().pickUpDate"
+                  name="pickUpDate"
+                  class="form-control"
+                  (ngModelChange)="calculateDayDifference()"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Teslim Alma Saati *</label>
+                <select
+                  class="form-control"
+                  [(ngModel)]="data().pickUpTime"
+                  name="pickUpTime"
+                  (ngModelChange)="calculateDayDifference()"
+                  required
+                >
+                  @for(time of timeData(); track time){
+                  <option [value]="time + ':00'">{{time}}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Teslim Etme Tarihi *</label>
+                <input
+                  [(ngModel)]="data().deliveryDate"
+                  name="deliveryDate"
+                  type="date"
+                  class="form-control"
+                  (ngModelChange)="calculateDayDifference()"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Teslim Etme Saati *</label>
+                <select
+                  class="form-control"
+                  [(ngModel)]="data().deliveryTime"
+                  name="deliveryTime"
+                  (ngModelChange)="calculateDayDifference()"
+                  required
+                >
+                  @for(time of timeData(); track time){
+                  <option [value]="time + ':00'">{{time}}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <!-- Kiralama Süresi Göstergesi -->
+            <div class="rental-duration-display">
+              <i class="bi bi-clock"></i>
+              <span class="duration-text">
+                Toplam: <strong>{{ displayDuration }}</strong>
+              </span>
+            </div>
+
+            <div class="mt-2 d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-dark btn-lg"
+                (click)="getVehicles()"
+              >
+                Araçları Listele
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Araç Seçimi -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-car-front text-primary me-2"></i>3. Araç Seçimi
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="vehicle-selection">
+              <!-- Filtreler -->
+              <div class="vehicle-filters">
+                <div class="row g-2 mb-3">
+                  <div class="col-md-4">
+                    <select
+                      class="form-select form-select-sm"
+                      [(ngModel)]="vehicleFilter().categoryName"
+                      [ngModelOptions]="{standalone:true}"
+                    >
+                      <option value="">Tüm Kategoriler</option>
+                      @for(category of categoriesData();track category.id){
+                      <option>{{category.name}}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select
+                      class="form-select form-select-sm"
+                      [(ngModel)]="vehicleFilter().fuelType"
+                      [ngModelOptions]="{standalone:true}"
+                    >
+                      <option value="">Yakıt Türü</option>
+                      @for(val of fuelTypes();track val){
+                      <option>{{val.name}}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select
+                      class="form-select form-select-sm"
+                      [(ngModel)]="vehicleFilter().transmission"
+                      [ngModelOptions]="{standalone:true}"
+                    >
+                      <option value="">Şanzıman</option>
+                      @for(val of transmissions();track val){
+                      <option>{{val.name}}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Araç Listesi -->
+              <div class="vehicle-list">
+                @for(vehicle of vehicles() | vehicle:
+                vehicleFilter().categoryName : vehicleFilter().fuelType :
+                vehicleFilter().transmission;track vehicle.id){
+                <!-- Araç Kartı 1 -->
+                <div>
+                  <div
+                    class="vehicle-card available"
+                    [ngClass]="selectedVehicle()?.id === vehicle.id ? 'vehicle-selected' : '' "
+                  >
+                    <input
+                      type="radio"
+                      name="vehicle"
+                      id="vehicle1{{$index}}"
+                      class="vehicle-radio"
+                    />
+                    <label
+                      for="vehicle1"
+                      class="vehicle-label"
+                      (click)="selectVehicle(vehicle)"
+                    >
+                      <div class="vehicle-image">
+                        <img
+                          [src]="getVehiclesImage(vehicle)"
+                          [alt]="vehicle.model"
+                        />
+                        <span class="availability-badge bg-success">Uygun</span>
+                      </div>
+                      <div class="vehicle-info">
+                        <h6>{{vehicle.model}}</h6>
+                        <p class="vehicle-plate">{{vehicle.plate}}</p>
+                        <div class="vehicle-features">
+                          <span
+                            ><i class="bi bi-fuel-pump"></i>
+                            {{vehicle.fuelType}}</span
+                          >
+                          <span
+                            ><i class="bi bi-gear"></i>
+                            {{vehicle.transmission}}</span
+                          >
+                          <span
+                            ><i class="bi bi-people"></i> {{vehicle.seatCount}}
+                            Kişi</span
+                          >
+                        </div>
+                      </div>
+                      <div class="vehicle-price">
+                        <div class="price-per-day">
+                          <small>Günlük</small>
+                          <strong
+                            >{{vehicle.dailyPrice | trCurrency:'₺'}}</strong
+                          >
+                        </div>
+                        <div class="total-price">
+                          <small>Toplam</small>
+                          <strong class="text-primary"
+                            >{{(data().totalDay * vehicle.dailyPrice) |
+                            trCurrency:'₺'}}</strong
+                          >
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Güvence Paketleri -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-shield-check text-primary me-2"></i>4. Güvence
+              Paketleri
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="protection-packages-grid">
+              @for(val of protectionPackagesData();track val.id){
+              <div
+                class="protection-package-card"
+                [class.recommended]="val.isRecommended"
+              >
+                @if(val.isRecommended){
+                <div class="recommended-badge">Önerilen</div>
+                }
+                <input
+                  type="radio"
+                  name="protectionPackage"
+                  id="packageGold{{$index}}"
+                  value="gold"
+                />
+                <label for="packageGold" class="package-label">
+                  <div
+                    class="package-header"
+                    [class.protection-package-selected]="val.id === data().protectionPackageId"
+                    (click)="selectProtectionPackage(val)"
+                  >
+                    <h6 class="package-name">{{val.name}}</h6>
+                    <div class="package-rating">
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                      <i class="bi bi-star-fill text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="package-price">
+                    <div class="price-label text-success">Muafiyetsiz</div>
+                  </div>
+                  <div class="package-features" style="height: 250px">
+                    @for(detail of val.coverages;track detail){
+                    <div class="feature-item included">
+                      <i class="bi bi-check-circle text-success"></i>
+                      <span>{{detail}}</span>
+                    </div>
+                    }
+                  </div>
+                  <div class="package-footer">
+                    <div class="daily-price">
+                      +{{val.price | trCurrency:'₺'}}<span>/gün</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Ek Seçenekler -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-plus-circle text-primary me-2"></i>5. Ek
+              Seçenekler
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <!-- Ek Ekipmanlar -->
+              <div class="col-12">
+                <div class="extras-grid">
+                  @for(val of extrasData();track val.id){
+                  <div class="extra-item">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="gps{{val.id}}"
+                        (change)="selectExtra(val)"
+                        [checked]="checkedExtra(val)"
+                      />
+                      <label class="form-check-label" for="gps{{val.id}}">
+                        <span class="extra-name">{{val.name}}</span>
+                        <span class="extra-price"
+                          >+{{val.price | trCurrency:'₺'}}</span
+                        >
+                      </label>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Özel İstekler -->
+              <div class="col-12">
+                <label class="form-label">Özel İstekler / Notlar</label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  placeholder="Müşterinin özel istekleri veya rezervasyon notları..."
+                  name="note"
+                  [(ngModel)]="data().note"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        @if(!id()){
+        <!-- Step 5: Ödeme Bilgileri -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-credit-card text-primary me-2"></i>5. Ödeme
+              Bilgileri
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-12">
+                <label class="form-label">Kart Sahibi *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [required]="true"
+                  name="owner"
+                  [(ngModel)]="data().creditCardInformation.cardOwner"
+                />
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">Kart Numarası *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  mask="0000 0000 0000 0000"
+                  placeholder="4444 4444 4444 4444"
+                  name="cardNumber"
+                  [(ngModel)]="data().creditCardInformation.cardNumber"
+                  [required]="true"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Son Kullanma Tarihi *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="10/20"
+                  name="expiry"
+                  [(ngModel)]="data().creditCardInformation.expiry"
+                  [required]="true"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">CCV *</label>
+                <input
+                  type="text"
+                  placeholder="000"
+                  maxlength="3"
+                  minlength="3"
+                  name="ccv"
+                  [(ngModel)]="data().creditCardInformation.ccv"
+                  class="form-control"
+                  [required]="true"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Sağ Kolon - Özet ve İşlemler -->
+      <div class="col-lg-4">
+        <!-- Rezervasyon Özeti -->
+        <div class="admin-card sticky-top">
+          <div class="card-header">
+            <h6>
+              <i class="bi bi-receipt text-primary me-2"></i>Rezervasyon Özeti
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="reservation-summary">
+              <!-- Müşteri Özeti -->
+              <div class="summary-section">
+                <h6 class="summary-title">Müşteri</h6>
+                <div class="summary-content" id="customerSummary">
+                  @if(selectedCustomer()){
+                  <ng-container *ngTemplateOutlet="customerCard" />
+
+                  }@else {
+                  <p class="text-muted">Müşteri seçilmedi</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Tarih Özeti -->
+              <div class="summary-section">
+                <h6 class="summary-title">Lokasyon & Tarih</h6>
+                <div class="summary-content" id="dateSummary">
+                  <div>
+                    <i class="bi bi-info-circle text-primary me-2"></i>
+                    <strong>{{branchName()}}</strong>
+                  </div>
+                  <div>
+                    <i class="bi bi-info-circle text-primary me-2"></i>
+                    <strong>Kiralanan Süre: {{displayDuration}}</strong>
+                  </div>
+                  <div>
+                    <i class="bi bi-info-circle text-primary me-2"></i>
+                    <strong
+                      >{{data().pickUpDate | date:'dd MMM yyyy'}}
+                      {{data().pickUpTime}}</strong
+                    >
+                    &rarr;
+                    <strong
+                      >{{data().deliveryDate | date:'dd MMM yyyy'}}
+                      {{data().deliveryTime}}</strong
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Araç Özeti -->
+              <div class="summary-section">
+                <h6 class="summary-title">Araç</h6>
+                <div class="summary-content" id="vehicleSummary">
+                  @if(!selectedVehicle()) {
+                  <p class="text-muted">Araç seçilmedi</p>
+                  }@else{
+                  <ng-container
+                    *ngTemplateOutlet="vehicleCard; context: {item: selectedVehicle()}"
+                  />
+                  }
+                </div>
+              </div>
+
+              <!-- Fiyat Özeti -->
+              <div
+                class="summary-section p-4 border rounded shadow-sm bg-white"
+              >
+                <h6
+                  class="summary-title text-muted fw-bold mb-4 pb-2 border-bottom"
+                >
+                  Fiyat Detayı
+                </h6>
+
+                <div class="price-summary d-flex flex-column gap-3">
+                  <!-- Araç Ücreti -->
+                  <div
+                    class="price-line d-flex justify-content-between align-items-center"
+                  >
+                    <span class="text-secondary">Güvence Paketi</span>
+                    <span id="protectionPrice" class="text-dark fw-medium">
+                      {{(data().protectionPackagePrice * data().totalDay) |
+                      trCurrency:'₺'}}
+                    </span>
+                  </div>
+                  <div
+                    class="price-line d-flex justify-content-between align-items-center"
+                  >
+                    <span class="text-secondary">Araç Ücreti</span>
+                    <span id="vehiclePrice" class="text-dark fw-medium">
+                      {{(data().vehicleDailyPrice * data().totalDay) |
+                      trCurrency:'₺'}}
+                    </span>
+                  </div>
+
+                  <!-- Ek Hizmetler -->
+                  <div
+                    class="price-line d-flex justify-content-between align-items-center"
+                  >
+                    <span class="text-secondary">Ek Hizmetler</span>
+                    <span id="extrasPrice" class="text-dark fw-medium"
+                      >{{totalExtra() | trCurrency:'₺'}}</span
+                    >
+                  </div>
+
+                  <!-- İndirimler -->
+                  <div
+                    class="price-line discount d-flex justify-content-between align-items-center text-success"
+                  >
+                    <span>İndirimler</span>
+                    <span id="discountPrice">0₺</span>
+                  </div>
+
+                  <hr class="text-muted my-1" />
+
+                  <!-- KDV -->
+                  <div
+                    class="price-line discount d-flex justify-content-between align-items-center text-success"
+                  >
+                    <span>KDV (%20)</span>
+                    <span id="taxPrice">Dahil</span>
+                  </div>
+
+                  <hr class="text-muted my-1" />
+
+                  <!-- Genel Toplam -->
+                  <div
+                    class="price-line grand-total d-flex justify-content-between align-items-center mt-2"
+                  >
+                    <span class="fs-5 fw-bold text-primary">Genel Toplam</span>
+                    <span id="grandTotal" class="fs-4 fw-bold text-primary">
+                      {{data().total | trCurrency:'₺'}}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Aksiyon Butonları -->
+                <div class="form-actions mt-4 d-flex flex-column gap-2">
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100 py-2 fw-medium"
+                  >
+                    <i class="bi bi-check-circle me-2"></i>{{btnName()}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</blank>
+
+<flexi-popup
+  [(isPopupVisible)]="isCustomerPopupVisible"
+  [loading]="isCustomerPopupLoading()"
+  [showActionButtons]="false"
+  height="550px"
+  popupTitle="Müşteri Ekle"
+>
+  <form
+    #customerForm="ngForm"
+    formValidate
+    class="admin-form"
+    (ngSubmit)="saveCustomer(customerForm)"
+  >
+    <div class="row g-3">
+      <div class="col-md-12">
+        <!-- Kimlik Bilgileri -->
+        <div class="mb-4">
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6 form-group">
+                <label>Ad (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Müşteri adı"
+                  [(ngModel)]="customerPopupData().firstName"
+                  name="customerFirstName"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir ad giriniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Soyad (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Müşteri soyadı"
+                  [(ngModel)]="customerPopupData().lastName"
+                  name="customerLastName"
+                  required
+                />
+                <div class="invalid-feedback">Geçerli bir soyad giriniz!</div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>TC / Pasaport No (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Kimlik Numarası"
+                  [(ngModel)]="customerPopupData().identityNumber"
+                  name="customerIdentityNumber"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Geçerli bir kimlik numarası giriniz!
+                </div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Doğum Tarihi (*)</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="customerPopupData().dateOfBirth"
+                  name="customerDateOfBirth"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Geçerli bir doğum tarihi giriniz!
+                </div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>E-Posta (*)</label>
+                <input
+                  type="customerEmail"
+                  class="form-control"
+                  placeholder="ornek@mail.com"
+                  [(ngModel)]="customerPopupData().email"
+                  name="email"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Geçerli bir e-posta adresi giriniz!
+                </div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label>Telefon No (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="05xxxxxxxxx"
+                  [(ngModel)]="customerPopupData().phoneNumber"
+                  name="customerPhoneNumber"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Geçerli bir telefon numarası giriniz!
+                </div>
+              </div>
+              <div class="col-md-12 form-group">
+                <label>Ehliyet Veriliş Tarihi (*)</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="customerPopupData().driverLicenceIssueDate"
+                  name="customerDriverLicenseIssueDate"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Geçerli bir ehliyet tarihi giriniz!
+                </div>
+              </div>
+              <div class="col-12 form-group">
+                <label>Adres (*)</label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  placeholder="Tam adres giriniz..."
+                  [(ngModel)]="customerPopupData().address"
+                  name="customerAddress"
+                  required
+                ></textarea>
+                <div class="invalid-feedback">Geçerli bir adres giriniz!</div>
+              </div>
+            </div>
+            <div class="row g-3"></div>
+          </div>
+          <div class="card-body"></div>
+        </div>
+        <div class="mb-4 text-end">
+          <button class="btn btn-primary" type="submit">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ btnName()}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form></flexi-popup
+>
+
+<ng-template #customerCard>
+  <div class="col-12 mt-3" id="selectedCustomer">
+    <div class="selected-customer-card">
+      <div class="customer-avatar">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNBRW6kw4PvewS5EGHKY7nNsJiWvrbsVIzZA&s"
+          alt="Müşteri"
+        />
+      </div>
+      <div class="customer-details">
+        <h6>
+          {{this.selectedCustomer()!.fullName}}
+        </h6>
+        <p class="mb-0">
+          📱 +90 {{this.selectedCustomer()!.phoneNumber | mask: '(000) 000 00
+          00'}}
+        </p>
+        <p class="mb-0">✉️ {{this.selectedCustomer()!.email}}</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-danger ms-auto"
+        (click)="clearCustomer()"
+      >
+        <i class="bi bi-x-circle"></i>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #vehicleCard let-item="item">
+  <div class="vehicle-card available">
+    <input
+      type="radio"
+      name="vehicle"
+      id="vehicle1"
+      class="vehicle-radio d-none"
+    />
+
+    <label
+      for="vehicle1"
+      class="vehicle-label d-flex flex-column p-3 border rounded shadow-sm gap-3 w-100"
+      style="cursor: pointer"
+    >
+      <!-- Görsel ve Etiket Kısmı -->
+      <div class="vehicle-image position-relative text-center">
+        <img
+          [src]="getVehiclesImage(item)"
+          [alt]="item.model"
+          class="img-fluid"
+          style="max-height: 140px; object-fit: contain"
+        />
+        <span
+          class="availability-badge badge bg-success position-absolute top-0 end-0 mt-2 me-2"
+          >Uygun</span
+        >
+      </div>
+
+      <!-- Araç Bilgileri -->
+      <div class="vehicle-info d-flex flex-column gap-3">
+        <!-- Model ve Plaka (Ortalanmış ve arasına gap eklenmiş hali) -->
+        <div class="d-flex justify-content-center align-items-center gap-3">
+          <h5 class="mb-0 fw-bold text-dark">{{item.model}}</h5>
+          <span class="vehicle-plate badge border bg-light text-secondary fs-6"
+            >{{item.plate}}</span
+          >
+        </div>
+
+        <!-- Özellikler (Ortalanmış ve geniş aralıklı) -->
+        <div
+          class="vehicle-features d-flex justify-content-center gap-4 text-secondary small"
+        >
+          <span class="d-flex flex-column align-items-center">
+            <i class="bi bi-fuel-pump text-primary mb-1 fs-5"></i>
+            {{item.fuelType}}
+          </span>
+          <span class="d-flex flex-column align-items-center">
+            <i class="bi bi-gear text-primary mb-1 fs-5"></i>
+            {{item.transmission}}
+          </span>
+          <span class="d-flex flex-column align-items-center">
+            <i class="bi bi-people text-primary mb-1 fs-5"></i>
+            {{item.seatCount}} Kişi
+          </span>
+        </div>
+      </div>
+
+      <!-- Fiyatlandırma (Alt alta ve ortalı) -->
+      <div
+        class="vehicle-price d-flex flex-column align-items-center border-top pt-3 mt-auto gap-2"
+      >
+        <div class="price-per-day text-center">
+          <small class="text-muted d-block mb-1">Günlük</small>
+          <strong class="text-dark fs-5"
+            >{{item.dailyPrice | trCurrency:'₺'}}</strong
+          >
+        </div>
+        <div class="total-price text-center">
+          <small class="text-muted d-block mb-1">Toplam</small>
+          <strong class="text-primary fs-4"
+            >{{(data().totalDay * item.dailyPrice) | trCurrency:'₺'}}</strong
+          >
+        </div>
+      </div>
+    </label>
+  </div>
+</ng-template>

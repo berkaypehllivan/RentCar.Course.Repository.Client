@@ -15,6 +15,12 @@ export const navigations: NavigationModel[] = [
     permission: 'dashboard:view',
   },
   {
+    title: 'Rezervasyonlar',
+    url: '/reservations',
+    icon: 'bi-calendar-check',
+    permission: 'reservation:view',
+  },
+  {
     title: 'Şubeler',
     url: '/branches',
     icon: 'bi-buildings',
@@ -51,7 +57,7 @@ export const navigations: NavigationModel[] = [
     permission: 'vehicle:view',
   },
   {
-    title: 'Koruma Paketleri',
+    title: 'Güvence Paketleri',
     url: '/protection-packages',
     icon: 'bi-shield-check',
     permission: 'protection_package:view',

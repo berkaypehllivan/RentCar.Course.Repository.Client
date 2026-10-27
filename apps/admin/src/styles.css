@@ -3435,12 +3435,16 @@ body {
   }
 }
 
-/* Detail Grid Layout */
 .detail-grid {
   display: grid;
-  /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
   gap: 1.5rem;
 }
+.reservation-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
 
 .detail-item {
   display: flex;
@@ -3561,6 +3565,7 @@ body {
   border-radius: 8px;
   position: relative;
   transition: all 0.3s ease;
+  margin-left: 20px;
 }
 
 .timeline-content::before {
@@ -4170,6 +4175,11 @@ body {
   border-color: #1976d2;
 }
 
+.vehicle-selected {
+  background: #e3f2fd;
+  border-color: #1976d2;
+}
+
 .vehicle-card.available .vehicle-radio:checked + .vehicle-label {
   box-shadow: inset 0 0 0 2px #1976d2;
 }
@@ -4256,7 +4266,7 @@ body {
 /* Ek Seçenekler */
 .extras-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   gap: 15px;
 }
 
@@ -4385,7 +4395,7 @@ body {
 
 /* Sticky Sidebar */
 .sticky-top {
-  top: 20px;
+  top: calc(var(--navbar-height) + 20px);
 }
 
 /* Responsive */
@@ -4550,6 +4560,11 @@ body {
   color: white;
 }
 
+.protection-package-selected{
+    background: #1976d2 !important;
+  color: white !important;
+}
+
 .package-header {
   padding: 20px;
   background: #f8f9fa;
@@ -4610,10 +4625,6 @@ body {
   gap: 8px;
   margin-bottom: 12px;
   font-size: 14px;
-}
-
-.feature-item:last-child {
-  margin-bottom: 0;
 }
 
 .feature-item i {
@@ -6923,4 +6934,17 @@ a {
 .price-tag .currency {
     font-size: 0.8rem;
     opacity: 0.9;
+}
+
+
+.flexi-grid-card-warning {
+    background-color: #ffc10778;
+    border-color: #ffc107 !important;
+    color: black;
+}
+
+.flexi-grid-card-info {
+    background-color: #5360ad7c;
+    border-color: #5360ad !important;
+    color: black;
 }

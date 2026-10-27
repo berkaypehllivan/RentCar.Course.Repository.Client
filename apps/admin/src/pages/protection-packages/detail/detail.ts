@@ -22,7 +22,7 @@ import Blank from '../../../components/blank/blank';
 import { TrCurrencyPipe } from 'tr-currency';
 
 @Component({
-  imports: [Blank,TrCurrencyPipe],
+  imports: [Blank, TrCurrencyPipe],
   templateUrl: './detail.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +41,7 @@ export default class Detail {
     () => this.result.value()?.data ?? initialProtectionPackageModel,
   );
   readonly loading = computed(() => this.result.isLoading());
-  readonly pageTitle = signal<string>("Koruma Paketi Detay");
+  readonly pageTitle = signal<string>('Güvence Paketi Detay');
 
   constructor() {
     this.#activated.params.subscribe((res) => {
@@ -51,7 +51,7 @@ export default class Detail {
     effect(() => {
       const breadcrumbs: BreadcrumbModel[] = [
         {
-          title: 'Koruma Paketleri',
+          title: 'Güvence Paketleri',
           icon: 'bi-shield-check',
           url: '/protection-packages',
         },

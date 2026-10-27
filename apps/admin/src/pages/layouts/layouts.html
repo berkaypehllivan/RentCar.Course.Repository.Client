@@ -13,8 +13,8 @@
 
   <div class="sidebar-content">
     <ul class="sidebar-menu">
-      @for(nav of navigations();track nav.title)
-      { @if(!nav.haveSubNav && checkPermission(nav.permission)){
+      @for(nav of navigations();track nav.title) { @if(!nav.haveSubNav &&
+      checkPermission(nav.permission)){
       <li
         [routerLink]="nav.url"
         routerLinkActive="active"

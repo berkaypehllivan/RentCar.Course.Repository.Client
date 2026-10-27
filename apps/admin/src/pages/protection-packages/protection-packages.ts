@@ -19,7 +19,7 @@ import Grid from '../../components/grid/grid';
 export default class ProtectionPackages {
   readonly breadcrumbs = signal<BreadcrumbModel[]>([
     {
-      title: 'Koruma Paketleri',
+      title: 'Güvence Paketleri',
       icon: 'bi-shield-check',
       url: '/protection-packages',
       isActive: true,

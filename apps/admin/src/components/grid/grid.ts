@@ -16,7 +16,9 @@ import {
   FlexiGridColumnComponent,
   FlexiGridModule,
   FlexiGridService,
+  StateFilterModel,
   StateModel,
+  StateSortModel,
 } from 'flexi-grid';
 import { ODataModel } from '../../models/odata.model';
 import { RouterLink } from '@angular/router';
@@ -51,6 +53,10 @@ export default class Grid implements AfterViewInit {
   readonly commandColumnWidth = input<string>('150px');
   readonly showIndex = input<boolean>(true);
   readonly captionTitle = input.required<string>();
+  readonly showIsActive = input<boolean>(true);
+  readonly sort = input<StateSortModel>({field:'',dir:'asc'});
+  readonly filter = input<StateFilterModel[]>([]);
+
 
   readonly columns = contentChildren(FlexiGridColumnComponent, {
     descendants: true,
@@ -62,8 +68,14 @@ export default class Grid implements AfterViewInit {
   );
 
   readonly state = signal<StateModel>(new StateModel());
+
   readonly result = httpResource<ODataModel<any>>(() => {
-    let endpoint = this.endpoint() + '?$count=true';
+    let endpoint = this.endpoint();
+    if (endpoint.includes('?')) {
+      endpoint += '&$count=true';
+    } else {
+      endpoint += '?$count=true';
+    }
     const part = this.#grid.getODataEndpoint(this.state());
     endpoint += `&${part}`;
 
@@ -80,13 +92,23 @@ export default class Grid implements AfterViewInit {
   readonly #grid = inject(FlexiGridService);
   readonly #common = inject(Common);
 
+  ngOnInit() {
+    const sort = this.sort();
+    this.state.update((prev) => ({
+      ...prev,
+      sort: sort.field ? sort : prev.sort,
+      filter: this.filter().length ? this.filter() : prev.filter,
+    }));
+  }
+
+
   ngAfterViewInit(): void {
     this.#breadcrumb.Reset(this.breadcrumbs());
     this.#title.setTitle(`RentCar | ${this.pageTitle()}`);
   }
 
   dataStateChange(state: StateModel) {
-    this.state.set(state);
+    this.state.set(state);    
   }
 
   delete(id: string) {

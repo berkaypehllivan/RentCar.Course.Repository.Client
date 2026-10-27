@@ -12,11 +12,22 @@
   <flexi-grid-column field="lastName" title="Soyad" />
   <flexi-grid-column field="identityNumber" title="TC/Pasaport No" />
   <flexi-grid-column field="email" title="E-Posta" />
-  <flexi-grid-column field="phoneNumber" title="Telefon No" />
-  <flexi-grid-column field="dateOfBirth" title="Doğum Tarihi" />
+  <flexi-grid-column field="phoneNumber" title="Telefon No">
+    <ng-template flexiGridCellTemplate let-item>
+      <span>+90{{ item.phoneNumber | mask: '(000) 000 00 00' }}</span>
+    </ng-template>
+  </flexi-grid-column>
+  <flexi-grid-column
+    field="dateOfBirth"
+    title="Doğum Tarihi"
+    filterType="date"
+    format="dd MMM yyyy"
+  />
   <flexi-grid-column
     field="driverLicenceIssueDate"
     title="Ehliyet Veriliş Tarihi"
+    filterType="date"
+    format="dd MMM yyyy"
   />
   <flexi-grid-column field="address" title="Adres" />
 </grid>

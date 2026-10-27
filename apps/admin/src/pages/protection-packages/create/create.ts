@@ -1,5 +1,13 @@
 import {
-  ChangeDetectionStrategy,  Component,  computed,  inject,  linkedSignal,  resource,  signal,  ViewEncapsulation,} from '@angular/core';
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  resource,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import Blank from '../../../components/blank/blank';
 import {
   BreadcrumbModel,
@@ -19,7 +27,13 @@ import { lastValueFrom } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
-  imports: [Blank, FormsModule, FormValidateDirective, NgClass,NgxMaskDirective],
+  imports: [
+    Blank,
+    FormsModule,
+    FormValidateDirective,
+    NgClass,
+    NgxMaskDirective,
+  ],
   templateUrl: './create.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +43,7 @@ export default class Create {
 
   readonly breadcrumbs = signal<BreadcrumbModel[]>([
     {
-      title: 'Koruma Paketleri',
+      title: 'Güvence Paketleri',
       icon: 'bi-shield-check',
       url: '/protection-packages',
       isActive: true,
@@ -37,7 +51,7 @@ export default class Create {
   ]);
 
   readonly pageTitle = computed(() =>
-    this.id() ? 'Koruma Paketi Güncelle' : 'Koruma Paketi Ekle',
+    this.id() ? 'Güvence Paketi Güncelle' : 'Güvence Paketi Ekle',
   );
   readonly pageIcon = computed(() => (this.id() ? 'bi-pen' : 'bi-plus'));
   readonly btnName = computed(() => (this.id() ? 'Güncelle' : 'Kaydet'));
@@ -157,7 +171,9 @@ export default class Create {
   removeCoverage(index: number) {
     this.data.update((prev) => ({
       ...prev,
-      coverages: prev.coverages.filter((_, coverageIndex) => coverageIndex !== index),
+      coverages: prev.coverages.filter(
+        (_, coverageIndex) => coverageIndex !== index,
+      ),
     }));
   }
 }
