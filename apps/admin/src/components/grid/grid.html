@@ -3,8 +3,6 @@
   [total]="total()"
   [dataBinding]="true"
   [loading]="loading()"
-  [sort]="sort()"
-  [filter]="filter()"
   (dataStateChange)="dataStateChange($event)"
   language="tr"
   [showCaption]="true"
@@ -13,6 +11,8 @@
   (dataStateChange)="dataStateChange($event)"
   [commandColumnWidth]="commandColumnWidth()"
   [showIndex]="showIndex()"
+  [sort]="sort()"
+  [filter]="filter()"
 >
   <ng-template flexiGridCaptionCommandTemplate>
     @if(commandTemplateRef() !== undefined){
@@ -30,7 +30,6 @@
   </ng-template>
 
   <ng-content />
-
   @if(showAudit()){ @if(showIsActive()){
 
   <flexi-grid-column

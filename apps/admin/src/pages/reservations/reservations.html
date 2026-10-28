@@ -8,11 +8,10 @@
   [breadcrumbs]="bredcrumbs()"
   captionTitle="Rezervasyon Listesi"
   [showIsActive]="false"
-  [sort]="{field:'PickUpDateTime',dir:'asc'}"
+  [sort]="{field:'pickUpDateTime',dir:'asc'}"
   [filter]='[{
     field:"status",
     value:"Bekliyor",
-    value2:"",
     operator:"eq",
     type:"select"
   }]'

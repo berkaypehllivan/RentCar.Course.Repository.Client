@@ -57,7 +57,6 @@ export default class Grid implements AfterViewInit {
   readonly sort = input<StateSortModel>({field:'',dir:'asc'});
   readonly filter = input<StateFilterModel[]>([]);
 
-
   readonly columns = contentChildren(FlexiGridColumnComponent, {
     descendants: true,
   });
