@@ -21,17 +21,14 @@
             <div class="row g-3">
               <div class="col-md-6 form-group">
                 <label>Marka (*)</label>
-                <select
-                  class="form-select"
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Örn: Fiat, Peugeot, BMW"
                   [(ngModel)]="data().brand"
                   name="brand"
                   required
-                >
-                  <option value="">Marka seçiniz</option>
-                  @for (b of brands(); track b) {
-                  <option [value]="b">{{ b }}</option>
-                  }
-                </select>
+                />
                 <div class="invalid-feedback">Marka seçiniz!</div>
               </div>
               <div class="col-md-6 form-group">
@@ -63,16 +60,14 @@
               </div>
               <div class="col-md-4 form-group">
                 <label>Renk</label>
-                <select
-                  class="form-select"
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Örn: Beyaz, Gri, Siyah"
                   [(ngModel)]="data().color"
                   name="color"
-                >
-                  <option value="">Renk seçiniz</option>
-                  @for (c of colors(); track c) {
-                  <option [value]="c">{{ c }}</option>
-                  }
-                </select>
+                  required
+                />
               </div>
               <div class="col-md-4 form-group">
                 <label>Plaka (*)</label>

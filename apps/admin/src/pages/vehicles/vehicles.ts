@@ -11,7 +11,6 @@ import Grid from '../../components/grid/grid';
 import { BreadcrumbModel } from '../../services/breadcrumb';
 import { Common } from '../../services/common';
 import { httpResource } from '@angular/common/http';
-import { brands } from './create/create';
 @Component({
   imports: [Grid, FlexiGridModule],
   templateUrl: './vehicles.html',
@@ -28,11 +27,8 @@ export default class Vehicles {
     },
   ]);
 
-  readonly brandFilterData = computed<FlexiGridFilterDataModel[]>(() =>
-    brands.map((val) => ({
-      value: val,
-      name: val,
-    })),
+  readonly brandsResource = httpResource<string[]>(
+    () => '/rent/odata/vehicles/brands',
   );
 
   readonly colorsResource = httpResource<string[]>(
@@ -44,6 +40,7 @@ export default class Vehicles {
 
   readonly colors = computed(() => this.colorsResource.value() ?? []);
   readonly years = computed(() => this.yearsResource.value() ?? []);
+  readonly brands = computed(() => this.brandsResource.value() ?? []);
 
   readonly #common = inject(Common);
 

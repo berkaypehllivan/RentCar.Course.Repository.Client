@@ -32,32 +32,11 @@ export interface FeatureGroup {
   features: { key: string; label: string; icon: string }[];
 }
 
-  export const brands = [
-    'BMW',
-    'Mercedes-Benz',
-    'Audi',
-    'Volkswagen',
-    'Renault',
-    'Fiat',
-    'Hyundai',
-    'Toyota',
-    'Peugeot',
-  ];
-
   export const modelYearList = Array.from(
     { length: 20 },
     (_, i) => new Date().getFullYear() + 1 - i,
   );
 
-  export const colors = [
-    'Beyaz',
-    'Siyah',
-    'Gri',
-    'Gümüş',
-    'Mavi',
-    'Kırmızı',
-    'Diğer',
-  ];
 
   export const fuelTypes = [
     { name: 'Benzin', value: 'Benzin' },
@@ -162,7 +141,6 @@ export default class Create {
   featuresInput = '';
   readonly insuranceTypes = signal<string[]>(['Sigorta', 'Kasko & Sigorta']);
   readonly modelYears = computed(() => modelYearList);
-  readonly colors = computed(() => colors);
   readonly fuelTypes =  computed(() => fuelTypes);
   readonly transmissions = computed(() => transmissions);
   readonly seatCounts = computed(() => seatCounts);
@@ -170,7 +148,6 @@ export default class Create {
   readonly tractionTypes = computed(() => tractionTypes);
   readonly tireStatuses = computed(() => tireStatuses);
   readonly generalStatuses = computed(() => generalStatuses);
-  readonly brands = computed(() => brands);
   readonly id = signal<string | undefined>(undefined);
   readonly imageBaseUrl = 'https://localhost:7216/images/';
 
