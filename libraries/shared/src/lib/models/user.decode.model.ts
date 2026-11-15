@@ -1,4 +1,4 @@
-export interface DecodeModel {
+export interface UserDecodeModel {
   id: string;
   fullName: string;
   fullNameWithEmail: string;
@@ -9,7 +9,7 @@ export interface DecodeModel {
   branchId: string;
 }
 
-export const initialDecode: DecodeModel = {
+export const initialDecode: UserDecodeModel = {
   id: '',
   fullName: '',
   fullNameWithEmail: '',

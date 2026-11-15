@@ -1,12 +1,15 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { DecodeModel, initialDecode } from '@shared/lib/models/decode.model';
+import {
+  UserDecodeModel,
+  initialDecode,
+} from '@shared/lib/models/user.decode.model';
 import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Common {
-  readonly decode = signal<DecodeModel>({ ...initialDecode });
+  readonly decode = signal<UserDecodeModel>({ ...initialDecode });
 
   readonly #router = inject(Router);
 
