@@ -20,8 +20,8 @@ import { NgClass } from '@angular/common';
 import {
   initialProtectionPackageModel,
   ProtectionPackageModel,
-} from '../../../models/protection-package.model';
-import { HttpService } from '../../../services/http';
+} from '@shared/lib/models/protection-package.model';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { lastValueFrom } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';

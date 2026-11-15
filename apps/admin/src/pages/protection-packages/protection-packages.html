@@ -1,4 +1,5 @@
 <grid
+  #grid
   pageTitle="Güvence Paketleri"
   endpoint="/rent/odata/protection-packages"
   [addOptions]="{url: '/protection-packages/add', permission: 'protection_package:create'}"
@@ -8,6 +9,8 @@
   [breadcrumbs]="breadcrumbs()"
   captionTitle="Güvence Paketi Listesi"
   [sort]="{field:'price',dir:'asc'}"
+  [reorderable]="true"
+  (onReorder)="onReorder($event)"
 >
   <flexi-grid-column field="name" title="Paket Adı" />
   <flexi-grid-column
@@ -24,6 +27,11 @@
     title="Önerilen"
     filterType="boolean"
     [booleanData]="['Evet', 'Hayır']"
+    textAlign="center"
+  />
+  <flexi-grid-column
+    field="orderNumber"
+    title="Sıra Numarası"
     textAlign="center"
   />
 </grid>

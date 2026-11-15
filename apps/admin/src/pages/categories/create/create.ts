@@ -1,13 +1,27 @@
 import {
-  ChangeDetectionStrategy,Component,computed,inject,linkedSignal,resource,signal,ViewEncapsulation,} from '@angular/core';
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  resource,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import Blank from '../../../components/blank/blank';
-import {  BreadcrumbModel,  BreadcrumbService,} from '../../../services/breadcrumb';
+import {
+  BreadcrumbModel,
+  BreadcrumbService,
+} from '../../../services/breadcrumb';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { NgClass } from '@angular/common';
-import { CategoryModel, initialCategory } from '../../../models/category.model';
-import { HttpService } from '../../../services/http';
+import {
+  CategoryModel,
+  initialCategory,
+} from '@shared/lib/models/category.model';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { lastValueFrom } from 'rxjs';
 

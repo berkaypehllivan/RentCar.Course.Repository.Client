@@ -12,12 +12,12 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FlexiToastService } from 'flexi-toast';
-import { HttpService } from '../../../services/http';
+import { HttpService } from '@shared/lib/services/http';
 import { httpResource } from '@angular/common/http';
 import Loading from '../../../components/loading/loading';
 
 @Component({
-  imports: [FormsModule, NgClass,Loading,RouterLink],
+  imports: [FormsModule, NgClass, Loading, RouterLink],
   templateUrl: './reset-password.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +25,9 @@ import Loading from '../../../components/loading/loading';
 export default class ResetPassword {
   readonly id = signal<string>('');
   readonly loading = signal<boolean>(false);
-  readonly result = httpResource(() => `/rent/auth/check-forgot-password-code/${this.id()}`);
+  readonly result = httpResource(
+    () => `/rent/auth/check-forgot-password-code/${this.id()}`,
+  );
   readonly resultLoading = computed(() => this.result.isLoading());
   readonly error = computed(() => this.result.error());
   readonly password = signal<string>('');

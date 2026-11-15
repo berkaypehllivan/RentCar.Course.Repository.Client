@@ -14,13 +14,13 @@ import {
   BreadcrumbService,
 } from '../../../services/breadcrumb';
 import { httpResource } from '@angular/common/http';
-import { Result } from '../../../models/result.model';
-import { BranchModel, initialBranch } from '../../../models/branch.model';
+import { Result } from '@shared/lib/models/result.model';
+import { BranchModel, initialBranch } from '@shared/lib/models/branch.model';
 import Blank from '../../../components/blank/blank';
 import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
-  imports: [Blank,NgxMaskPipe],
+  imports: [Blank, NgxMaskPipe],
   templateUrl: './detail.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +37,7 @@ export default class Detail {
   );
   readonly data = computed(() => this.result.value()?.data ?? initialBranch);
   readonly loading = computed(() => this.result.isLoading());
-  readonly pageTitle = computed(()=> this.data()?.name ?? "Şube Detay");
+  readonly pageTitle = computed(() => this.data()?.name ?? 'Şube Detay');
 
   constructor() {
     this.#activated.params.subscribe((res) => {

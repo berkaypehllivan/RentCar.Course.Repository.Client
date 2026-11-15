@@ -13,7 +13,9 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "paths": {}
+    "paths": {
+      "@shared/*": ["./libraries/shared/src/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

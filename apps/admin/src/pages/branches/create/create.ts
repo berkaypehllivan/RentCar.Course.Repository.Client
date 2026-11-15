@@ -18,8 +18,8 @@ import { ActivatedRoute, isActive, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { NgClass } from '@angular/common';
-import { BranchModel, initialBranch } from '../../../models/branch.model';
-import { HttpService } from '../../../services/http';
+import { BranchModel, initialBranch } from '@shared/lib/models/branch.model';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { NgxMaskDirective } from 'ngx-mask';
 import { lastValueFrom } from 'rxjs';
@@ -111,10 +111,10 @@ export default class Create {
     });
 
     effect(() => {
-      if(this.data().address.city){
+      if (this.data().address.city) {
         this.getIlceler();
       }
-    })
+    });
   }
 
   save(form: NgForm) {

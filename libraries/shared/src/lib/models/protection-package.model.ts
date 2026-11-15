@@ -4,6 +4,7 @@ export interface ProtectionPackageModel extends EntityModel {
   name: string;
   price: number;
   isRecommended: boolean;
+  orderNumber:number;
   coverages: string[];
 }
 
@@ -12,6 +13,7 @@ export const initialProtectionPackageModel: ProtectionPackageModel = {
   name: '',
   price: 0,
   isRecommended: false,
+  orderNumber: 0,
   coverages: [],
   createdAt: '',
   createdBy: '',

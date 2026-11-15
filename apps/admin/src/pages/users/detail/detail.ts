@@ -13,8 +13,8 @@ import {
   BreadcrumbService,
 } from '../../../services/breadcrumb';
 import { httpResource } from '@angular/common/http';
-import { Result } from '../../../models/result.model';
-import { UserModel, initialUser } from '../../../models/user.model';
+import { Result } from '@shared/lib/models/result.model';
+import { UserModel, initialUser } from '@shared/lib/models/user.model';
 import Blank from '../../../components/blank/blank';
 import { NgxMaskPipe } from 'ngx-mask';
 
@@ -36,7 +36,9 @@ export default class Detail {
   );
   readonly data = computed(() => this.result.value()?.data ?? initialUser);
   readonly loading = computed(() => this.result.isLoading());
-  readonly pageTitle = computed(() => this.data()?.firstName + " " + this.data()?.lastName);
+  readonly pageTitle = computed(
+    () => this.data()?.firstName + ' ' + this.data()?.lastName,
+  );
 
   constructor() {
     this.#activated.params.subscribe((res) => {

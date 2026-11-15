@@ -13,8 +13,8 @@ import {
   BreadcrumbService,
 } from '../../../services/breadcrumb';
 import { httpResource } from '@angular/common/http';
-import { Result } from '../../../models/result.model';
-import { RoleModel, initialRole } from '../../../models/role.model';
+import { Result } from '@shared/lib/models/result.model';
+import { RoleModel, initialRole } from '@shared/lib/models/role.model';
 import Blank from '../../../components/blank/blank';
 import { NgxMaskPipe } from 'ngx-mask';
 

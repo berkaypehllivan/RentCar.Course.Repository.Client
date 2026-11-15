@@ -17,19 +17,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { NgClass } from '@angular/common';
-import { initialUser, UserModel } from '../../../models/user.model';
-import { HttpService } from '../../../services/http';
+import { initialUser, UserModel } from '@shared/lib/models/user.model';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { lastValueFrom } from 'rxjs';
 import { httpResource } from '@angular/common/http';
-import { ODataModel } from '../../../models/odata.model';
-import { BranchModel } from '../../../models/branch.model';
-import { RoleModel } from '../../../models/role.model';
+import { ODataModel } from '@shared/lib/models/odata.model';
+import { BranchModel } from '@shared/lib/models/branch.model';
+import { RoleModel } from '@shared/lib/models/role.model';
 import { FlexiSelectModule } from 'flexi-select';
 import { Common } from '../../../services/common';
 
 @Component({
-  imports: [Blank, FormsModule, FormValidateDirective, NgClass,FlexiSelectModule],
+  imports: [
+    Blank,
+    FormsModule,
+    FormValidateDirective,
+    NgClass,
+    FlexiSelectModule,
+  ],
   templateUrl: './create.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -149,7 +155,7 @@ export default class Create {
     }));
   }
 
-  checkIsAdmin(){
-    return this.#common.decode().role === "sys_admin";
+  checkIsAdmin() {
+    return this.#common.decode().role === 'sys_admin';
   }
 }

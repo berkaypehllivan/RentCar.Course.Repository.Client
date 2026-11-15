@@ -13,8 +13,11 @@ import {
   BreadcrumbService,
 } from '../../../services/breadcrumb';
 import { httpResource } from '@angular/common/http';
-import { Result } from '../../../models/result.model';
-import { CategoryModel, initialCategory } from '../../../models/category.model';
+import { Result } from '@shared/lib/models/result.model';
+import {
+  CategoryModel,
+  initialCategory,
+} from '@shared/lib/models/category.model';
 import Blank from '../../../components/blank/blank';
 
 @Component({

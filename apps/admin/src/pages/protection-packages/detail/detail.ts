@@ -13,11 +13,11 @@ import {
   BreadcrumbService,
 } from '../../../services/breadcrumb';
 import { httpResource } from '@angular/common/http';
-import { Result } from '../../../models/result.model';
+import { Result } from '@shared/lib/models/result.model';
 import {
   initialProtectionPackageModel,
   ProtectionPackageModel,
-} from '../../../models/protection-package.model';
+} from '@shared/lib/models/protection-package.model';
 import Blank from '../../../components/blank/blank';
 import { TrCurrencyPipe } from 'tr-currency';
 

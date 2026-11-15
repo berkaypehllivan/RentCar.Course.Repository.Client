@@ -20,33 +20,33 @@ import {
 import {
   initialReservationModel,
   ReservationModel,
-} from '../../../models/reservation.model';
+} from '@shared/lib/models/reservation.model';
 import { lastValueFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpService } from '../../../services/http';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { DatePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { FlexiPopupModule } from 'flexi-popup';
 import {
   CustomerModel,
   initialCustomerModel,
-} from '../../../models/customer.model';
+} from '@shared/lib/models/customer.model';
 import { httpResource } from '@angular/common/http';
-import { ODataModel } from '../../../models/odata.model';
+import { ODataModel } from '@shared/lib/models/odata.model';
 import { FlexiGridModule, FlexiGridService, StateModel } from 'flexi-grid';
-import { BranchModel } from '../../../models/branch.model';
+import { BranchModel } from '@shared/lib/models/branch.model';
 import { FlexiSelectModule } from 'flexi-select';
 import { Common } from '../../../services/common';
 import {
   initialVehicleModel,
   VehicleModel,
-} from '../../../models/vehicle.model';
+} from '@shared/lib/models/vehicle.model';
 import { TrCurrencyPipe } from 'tr-currency';
-import { CategoryModel } from '../../../models/category.model';
+import { CategoryModel } from '@shared/lib/models/category.model';
 import { fuelTypes, transmissions } from '../../vehicles/create/create';
 import { VehiclePipe } from '../../../pipes/vehicle-pipe';
-import { ProtectionPackageModel } from '../../../models/protection-package.model';
-import { ExtraModel } from '../../../models/extra.model';
+import { ProtectionPackageModel } from '@shared/lib/models/protection-package.model';
+import { ExtraModel } from '@shared/lib/models/extra.model';
 
 @Component({
   imports: [
@@ -136,9 +136,10 @@ export default class Create {
       this.vehicles.set([{ ...this.selectedVehicle()! }]);
 
       let totalExtra = 0;
-      res.data!.reservationExtras.forEach(val => {
-        totalExtra += (val.price * res.data!.totalDay)});
-        this.totalExtra.set(totalExtra);
+      res.data!.reservationExtras.forEach((val) => {
+        totalExtra += val.price * res.data!.totalDay;
+      });
+      this.totalExtra.set(totalExtra);
 
       return res.data;
     },
@@ -201,7 +202,7 @@ export default class Create {
 
   readonly protectionPackagesResult = httpResource<
     ODataModel<ProtectionPackageModel>
-  >(() => '/rent/odata/protection-packages');
+  >(() => '/rent/odata/protection-packages?orderby=OrderNumber');
   readonly protectionPackagesData = computed(
     () => this.protectionPackagesResult.value()?.value ?? [],
   );
@@ -287,7 +288,7 @@ export default class Create {
       this.data.update((prev) => ({
         ...prev,
         reservationCreditCard: { ...cardInformation },
-      })); 
+      }));
       this.#http.post<string>(
         '/rent/reservations',
         this.data(),

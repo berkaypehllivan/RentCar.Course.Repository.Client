@@ -12,11 +12,11 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { TrCurrencyPipe } from 'tr-currency';
 import Blank from '../../../components/blank/blank';
-import { Result } from '../../../models/result.model';
+import { Result } from '@shared/lib/models/result.model';
 import {
   initialVehicleModel,
   VehicleModel,
-} from '../../../models/vehicle.model';
+} from '@shared/lib/models/vehicle.model';
 import {
   BreadcrumbModel,
   BreadcrumbService,

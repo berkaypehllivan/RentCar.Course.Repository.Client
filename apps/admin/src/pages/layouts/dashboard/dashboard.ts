@@ -14,7 +14,7 @@ import {
 import { BreadcrumbService } from '../../../services/breadcrumb';
 import Blank from '../../../components/blank/blank';
 import { httpResource } from '@angular/common/http';
-import { Result } from '../../../models/result.model';
+import { Result } from '@shared/lib/models/result.model';
 import { TrCurrencyPipe } from 'tr-currency';
 import {
   Chart,
@@ -239,8 +239,8 @@ export default class Dashboard implements OnInit {
   readonly revenueChartResult = httpResource<Result<ChartPointDto[]>>(
     () => `/rent/dashboard/revenue-chart?period=${this.period()}`,
   );
-  
-readonly chartCanvas1 =
+
+  readonly chartCanvas1 =
     viewChild.required<ElementRef<HTMLCanvasElement>>('revenueChartCanvas');
 
   readonly res1 = computed<ChartsData>(() => {

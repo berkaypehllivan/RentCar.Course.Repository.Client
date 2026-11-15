@@ -9,23 +9,24 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import Blank from '../../../components/blank/blank';
-import { BreadcrumbModel, BreadcrumbService } from '../../../services/breadcrumb';
+import {
+  BreadcrumbModel,
+  BreadcrumbService,
+} from '../../../services/breadcrumb';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { DatePipe, NgClass } from '@angular/common';
-import { initialCustomerModel, CustomerModel } from '../../../models/customer.model';
-import { HttpService } from '../../../services/http';
+import {
+  initialCustomerModel,
+  CustomerModel,
+} from '@shared/lib/models/customer.model';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { lastValueFrom } from 'rxjs';
 
 @Component({
-  imports: [
-    Blank,
-    FormsModule,
-    FormValidateDirective,
-    NgClass,
-  ],
+  imports: [Blank, FormsModule, FormValidateDirective, NgClass],
   templateUrl: './create.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,7 +44,9 @@ export default class Create {
     },
   ]);
 
-  readonly pageTitle = computed(() => (this.id() ? 'Müşteri Güncelle' : 'Müşteri Ekle'));
+  readonly pageTitle = computed(() =>
+    this.id() ? 'Müşteri Güncelle' : 'Müşteri Ekle',
+  );
   readonly pageIcon = computed(() => (this.id() ? 'bi-pen' : 'bi-plus'));
   readonly btnName = computed(() => (this.id() ? 'Güncelle' : 'Kaydet'));
 

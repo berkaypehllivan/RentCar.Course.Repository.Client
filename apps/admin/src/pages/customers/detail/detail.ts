@@ -11,11 +11,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Blank from '../../../components/blank/blank';
-import { Result } from '../../../models/result.model';
+import { Result } from '@shared/lib/models/result.model';
 import {
   initialCustomerModel,
   CustomerModel,
-} from '../../../models/customer.model';
+} from '@shared/lib/models/customer.model';
 import {
   BreadcrumbModel,
   BreadcrumbService,
@@ -30,16 +30,16 @@ import {
 export default class CustomerDetail {
   readonly id = signal<string>('');
   readonly breadcrumbs = signal<BreadcrumbModel[]>([]);
-  
+
   // Endpoint Backend yapına göre /customers veya /api/customers olabilir
   readonly result = httpResource<Result<CustomerModel>>(
     () => `/rent/customers/${this.id()}`,
   );
-  
+
   readonly data = computed(
     () => this.result.value()?.data ?? initialCustomerModel,
   );
-  
+
   readonly loading = computed(() => this.result.isLoading());
   readonly pageTitle = signal<string>('Müşteri Detay');
 

@@ -9,7 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { EntityModel } from '../../models/entity.model';
+import { EntityModel } from '@shared/lib/models/entity.model';
 import { FormsModule } from '@angular/forms';
 import Loading from '../loading/loading';
 import { Title } from '@angular/platform-browser';
@@ -36,7 +36,6 @@ export default class Blank {
   readonly loading = input<boolean>(false);
   readonly size = input<string>('col-md-12');
 
-
   readonly changeStatusEvent = output<boolean>();
 
   readonly #location = inject(Location);
@@ -51,13 +50,13 @@ export default class Blank {
   }
 
   readonly #title = inject(Title);
-  
-constructor() {
-  effect(() => {
-    const title = this.pageTitle();
-    if(title){
-      this.#title.setTitle(`RentCar | ${title}`);
-    }
-  })
-}
+
+  constructor() {
+    effect(() => {
+      const title = this.pageTitle();
+      if (title) {
+        this.#title.setTitle(`RentCar | ${title}`);
+      }
+    });
+  }
 }

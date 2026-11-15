@@ -17,11 +17,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { NgClass } from '@angular/common';
-import { initialRole } from '../../../models/role.model';
-import { HttpService } from '../../../services/http';
+import { initialRole } from '@shared/lib/models/role.model';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { lastValueFrom } from 'rxjs';
-import { RoleModel } from '../../../models/role.model';
+import { RoleModel } from '@shared/lib/models/role.model';
 
 @Component({
   imports: [Blank, FormsModule, FormValidateDirective, NgClass],

@@ -17,112 +17,114 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { DatePipe, NgClass } from '@angular/common';
-import { initialVehicleModel, VehicleModel } from '../../../models/vehicle.model';
-import { HttpService } from '../../../services/http';
+import {
+  initialVehicleModel,
+  VehicleModel,
+} from '@shared/lib/models/vehicle.model';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 import { lastValueFrom } from 'rxjs';
 import { httpResource } from '@angular/common/http';
 import { FlexiSelectModule } from 'flexi-select';
-import { ODataModel } from '../../../models/odata.model';
-import { CategoryModel } from '../../../models/category.model';
-import { BranchModel } from '../../../models/branch.model';
+import { ODataModel } from '@shared/lib/models/odata.model';
+import { CategoryModel } from '@shared/lib/models/category.model';
+import { BranchModel } from '@shared/lib/models/branch.model';
 
 export interface FeatureGroup {
   group: string;
   features: { key: string; label: string; icon: string }[];
 }
 
-  export const modelYearList = Array.from(
-    { length: 20 },
-    (_, i) => new Date().getFullYear() + 1 - i,
-  );
+export const modelYearList = Array.from(
+  { length: 20 },
+  (_, i) => new Date().getFullYear() + 1 - i,
+);
 
+export const fuelTypes = [
+  { name: 'Benzin', value: 'Benzin' },
+  { name: 'Dizel', value: 'Dizel' },
+  { name: 'LPG', value: 'LPG' },
+  { name: 'Elektrik', value: 'Elektrik' },
+  { name: 'Hibrit', value: 'Hibrit' },
+];
 
-  export const fuelTypes = [
-    { name: 'Benzin', value: 'Benzin' },
-    { name: 'Dizel', value: 'Dizel' },
-    { name: 'LPG', value: 'LPG' },
-    { name: 'Elektrik', value: 'Elektrik' },
-    { name: 'Hibrit', value: 'Hibrit' },
-  ];
+export const transmissions = [
+  { name: 'Manuel', value: 'Manuel' },
+  { name: 'Otomatik', value: 'Otomatik' },
+  { name: 'CVT', value: 'CVT' },
+];
 
-  export const transmissions = [
-    { name: 'Manuel', value: 'Manuel' },
-    { name: 'Otomatik', value: 'Otomatik' },
-    { name: 'CVT', value: 'CVT' },
-  ];
+export const seatCounts = [
+  { name: '2', value: 2 },
+  { name: '4', value: 4 },
+  { name: '5', value: 5 },
+  { name: '7', value: 7 },
+  { name: '8', value: 8 },
+  { name: '9', value: 9 },
+];
 
-  export const seatCounts = [
-    { name: '2', value: 2 },
-    { name: '4', value: 4 },
-    { name: '5', value: 5 },
-    { name: '7', value: 7 },
-    { name: '8', value: 8 },
-    { name: '9', value: 9 },
-  ];
+export const featureGroups: FeatureGroup[] = [
+  {
+    group: 'Güvenlik Özellikleri',
+    features: [
+      { key: 'Airbag', label: 'Airbag', icon: 'bi-shield-check' },
+      { key: 'ABS', label: 'ABS', icon: 'bi-shield-exclamation' },
+      { key: 'ESP', label: 'ESP', icon: 'bi-shield-fill-check' },
+      { key: 'Alarm Sistemi', label: 'Alarm Sistemi', icon: 'bi-bell' },
+    ],
+  },
+  {
+    group: 'Konfor Özellikleri',
+    features: [
+      { key: 'Klima', label: 'Klima', icon: 'bi-snow' },
+      {
+        key: 'Isıtmalı Koltuk',
+        label: 'Isıtmalı Koltuk',
+        icon: 'bi-thermometer-half',
+      },
+      { key: 'Sunroof', label: 'Sunroof', icon: 'bi-brightness-high' },
+      { key: 'Bluetooth', label: 'Bluetooth', icon: 'bi-bluetooth' },
+    ],
+  },
+  {
+    group: 'Sürüş Destekleri',
+    features: [
+      { key: 'GPS Navigasyon', label: 'GPS Navigasyon', icon: 'bi-geo-alt' },
+      { key: 'Park Sensörü', label: 'Park Sensörü', icon: 'bi-bullseye' },
+      {
+        key: 'Geri Görüş Kamerası',
+        label: 'Geri Görüş Kamerası',
+        icon: 'bi-camera',
+      },
+      {
+        key: 'Cruise Control',
+        label: 'Cruise Control',
+        icon: 'bi-speedometer',
+      },
+    ],
+  },
+  {
+    group: 'Multimedya',
+    features: [
+      {
+        key: 'Dokunmatik Ekran',
+        label: 'Dokunmatik Ekran',
+        icon: 'bi-tablet',
+      },
+      { key: 'USB Bağlantısı', label: 'USB Bağlantısı', icon: 'bi-usb-plug' },
+      {
+        key: 'Premium Ses Sistemi',
+        label: 'Premium Ses Sistemi',
+        icon: 'bi-music-note',
+      },
+      { key: 'Apple CarPlay', label: 'Apple CarPlay', icon: 'bi-phone' },
+    ],
+  },
+];
 
-  export const featureGroups: FeatureGroup[] = [
-    {
-      group: 'Güvenlik Özellikleri',
-      features: [
-        { key: 'Airbag', label: 'Airbag', icon: 'bi-shield-check' },
-        { key: 'ABS', label: 'ABS', icon: 'bi-shield-exclamation' },
-        { key: 'ESP', label: 'ESP', icon: 'bi-shield-fill-check' },
-        { key: 'Alarm Sistemi', label: 'Alarm Sistemi', icon: 'bi-bell' },
-      ],
-    },
-    {
-      group: 'Konfor Özellikleri',
-      features: [
-        { key: 'Klima', label: 'Klima', icon: 'bi-snow' },
-        {
-          key: 'Isıtmalı Koltuk',
-          label: 'Isıtmalı Koltuk',
-          icon: 'bi-thermometer-half',
-        },
-        { key: 'Sunroof', label: 'Sunroof', icon: 'bi-brightness-high' },
-        { key: 'Bluetooth', label: 'Bluetooth', icon: 'bi-bluetooth' },
-      ],
-    },
-    {
-      group: 'Sürüş Destekleri',
-      features: [
-        { key: 'GPS Navigasyon', label: 'GPS Navigasyon', icon: 'bi-geo-alt' },
-        { key: 'Park Sensörü', label: 'Park Sensörü', icon: 'bi-bullseye' },
-        {
-          key: 'Geri Görüş Kamerası',
-          label: 'Geri Görüş Kamerası',
-          icon: 'bi-camera',
-        },
-        {
-          key: 'Cruise Control',
-          label: 'Cruise Control',
-          icon: 'bi-speedometer',
-        },
-      ],
-    },
-    {
-      group: 'Multimedya',
-      features: [
-        {
-          key: 'Dokunmatik Ekran',
-          label: 'Dokunmatik Ekran',
-          icon: 'bi-tablet',
-        },
-        { key: 'USB Bağlantısı', label: 'USB Bağlantısı', icon: 'bi-usb-plug' },
-        {
-          key: 'Premium Ses Sistemi',
-          label: 'Premium Ses Sistemi',
-          icon: 'bi-music-note',
-        },
-        { key: 'Apple CarPlay', label: 'Apple CarPlay', icon: 'bi-phone' },
-      ],
-    },
-  ];
-
-  export const tractionTypes = ['Önden Çekiş', 'Arkadan İtiş', '4x4'];
-  export const tireStatuses = ['Çok İyi', 'İyi', 'Orta', 'Değişmeli'];
-  export const generalStatuses = ['Mükemmel', 'İyi', 'Orta', 'Bakım Gerekli'];
+export const tractionTypes = ['Önden Çekiş', 'Arkadan İtiş', '4x4'];
+export const tireStatuses = ['Çok İyi', 'İyi', 'Orta', 'Değişmeli'];
+export const generalStatuses = ['Mükemmel', 'İyi', 'Orta', 'Bakım Gerekli'];
 
 @Component({
   imports: [
@@ -141,7 +143,7 @@ export default class Create {
   featuresInput = '';
   readonly insuranceTypes = signal<string[]>(['Sigorta', 'Kasko & Sigorta']);
   readonly modelYears = computed(() => modelYearList);
-  readonly fuelTypes =  computed(() => fuelTypes);
+  readonly fuelTypes = computed(() => fuelTypes);
   readonly transmissions = computed(() => transmissions);
   readonly seatCounts = computed(() => seatCounts);
   readonly featureGroups = computed(() => featureGroups);
@@ -228,7 +230,6 @@ export default class Create {
         ? this.imageBaseUrl + this.data().imageUrl
         : undefined),
   );
-
 
   readonly #breadcrumb = inject(BreadcrumbService);
   readonly #activated = inject(ActivatedRoute);

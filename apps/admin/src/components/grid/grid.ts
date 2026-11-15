@@ -8,6 +8,7 @@ import {
   contentChildren,
   inject,
   input,
+  output,
   signal,
   TemplateRef,
   ViewEncapsulation,
@@ -15,15 +16,16 @@ import {
 import {
   FlexiGridColumnComponent,
   FlexiGridModule,
+  FlexiGridReorderModel,
   FlexiGridService,
   StateFilterModel,
   StateModel,
   StateSortModel,
 } from 'flexi-grid';
-import { ODataModel } from '../../models/odata.model';
+import { ODataModel } from '@shared/lib/models/odata.model';
 import { RouterLink } from '@angular/router';
 import { FlexiToastService } from 'flexi-toast';
-import { HttpService } from '../../services/http';
+import { HttpService } from '@shared/lib/services/http';
 import { BreadcrumbModel, BreadcrumbService } from '../../services/breadcrumb';
 import { NgTemplateOutlet } from '@angular/common';
 import { Common } from '../../services/common';
@@ -54,8 +56,11 @@ export default class Grid implements AfterViewInit {
   readonly showIndex = input<boolean>(true);
   readonly captionTitle = input.required<string>();
   readonly showIsActive = input<boolean>(true);
-  readonly sort = input<StateSortModel>({field:'',dir:'asc'});
+  readonly sort = input<StateSortModel>({ field: '', dir: 'asc' });
   readonly filter = input<StateFilterModel[]>([]);
+  readonly reorderable = input<boolean>(false);
+
+  readonly onReorder = output<FlexiGridReorderModel>();
 
   readonly columns = contentChildren(FlexiGridColumnComponent, {
     descendants: true,
@@ -100,14 +105,13 @@ export default class Grid implements AfterViewInit {
     }));
   }
 
-
   ngAfterViewInit(): void {
     this.#breadcrumb.Reset(this.breadcrumbs());
     this.#title.setTitle(`RentCar | ${this.pageTitle()}`);
   }
 
   dataStateChange(state: StateModel) {
-    this.state.set(state);    
+    this.state.set(state);
   }
 
   delete(id: string) {
@@ -130,5 +134,9 @@ export default class Grid implements AfterViewInit {
 
   checkPermission(permission: string) {
     return this.#common.checkPermission(permission);
+  }
+
+  onReorderMethod(event: FlexiGridReorderModel) {
+    this.onReorder.emit(event);
   }
 }

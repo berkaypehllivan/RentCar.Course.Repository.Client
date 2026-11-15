@@ -13,16 +13,17 @@
         "outputPath": "dist/apps/admin",
         "browser": "apps/admin/src/main.ts",
         "tsConfig": "apps/admin/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
+        "inlineStyleLanguage": "css",
         "assets": [
           {
             "glob": "**/*",
             "input": "apps/admin/public"
           }
         ],
-        "styles": ["apps/admin/src/styles.css",
-        "node_modules/flexi-toast/src/flexi-toast.css"
-      ]
+        "styles": [
+          "apps/admin/src/styles.css",
+          "node_modules/flexi-toast/src/flexi-toast.css"
+        ]
       },
       "configurations": {
         "production": {

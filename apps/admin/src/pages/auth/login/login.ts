@@ -10,7 +10,7 @@ import {
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormValidateDirective } from 'form-validate-angular';
-import { HttpService } from '../../../services/http';
+import { HttpService } from '@shared/lib/services/http';
 import { FlexiToastService } from 'flexi-toast';
 
 @Component({
@@ -50,25 +50,25 @@ export default class Login {
         } else if (res.tfaCode != null) {
           this.tfaCode.set(res.tfaCode);
           this.showTfaForm.set(true);
-          this.time.set({min:5,sec:0});
+          this.time.set({ min: 5, sec: 0 });
 
-         var interval:any = setInterval(() => {
+          var interval: any = setInterval(() => {
             let min = this.time().min;
             let sec = this.time().sec;
 
             sec--;
-            if(sec < 0){
+            if (sec < 0) {
               sec = 59;
               min--;
 
-              if(min < 0){
+              if (min < 0) {
                 min = 0;
                 interval.clear();
                 this.showTfaForm.set(false);
               }
             }
 
-            this.time.set({min:min,sec:sec});
+            this.time.set({ min: min, sec: sec });
           }, 1000);
         }
         this.loading.set(false);
