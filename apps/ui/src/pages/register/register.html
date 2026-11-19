@@ -24,7 +24,13 @@
 
           <!-- Register Form -->
           <div class="auth-form-container" id="registerForm">
-            <form class="auth-form">
+            <form
+              #form="ngForm"
+              formValidate
+              autocomplete="off"
+              class="auth-form"
+              (ngSubmit)="register(form)"
+            >
               <div class="row g-3">
                 <div class="col-md-6">
                   <label for="firstName" class="form-label">Ad</label>
@@ -36,6 +42,8 @@
                       type="text"
                       class="form-control"
                       id="firstName"
+                      name="firstName"
+                      ngModel
                       placeholder="Adınız"
                       required
                     />
@@ -51,6 +59,8 @@
                       type="text"
                       class="form-control"
                       id="lastName"
+                      name="lastName"
+                      ngModel
                       placeholder="Soyadınız"
                       required
                     />
@@ -61,23 +71,49 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="userName" class="form-label"
-                      >Kullanıcı Adı</label
+                    <label for="identityNumber" class="form-label"
+                      >Kimlik Numarası</label
                     >
                     <div class="input-group">
                       <span class="input-group-text">
-                        <i class="bi bi-person"></i>
+                        <i class="bi bi-card-text"></i>
                       </span>
                       <input
                         type="text"
                         class="form-control"
-                        id="userName"
-                        placeholder="Kullanıcı adı girin"
+                        id="identityNumber"
+                        name="identityNumber"
+                        ngModel
+                        maxlength="11"
+                        placeholder="11 haneli kimlik numaranız"
                         required
                       />
                     </div>
                   </div>
                 </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="dateOfBirth" class="form-label"
+                      >Doğum Tarihi</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <i class="bi bi-calendar"></i>
+                      </span>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="dateOfBirth"
+                        name="dateOfBirth"
+                        ngModel
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="registerEmail" class="form-label"
@@ -91,8 +127,29 @@
                         type="email"
                         class="form-control"
                         id="registerEmail"
+                        name="email"
+                        ngModel
                         placeholder="E-posta adresinizi girin"
                         required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="phoneNumber" class="form-label"
+                      >Telefon Numarası</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text"> +90 </span>
+                      <input
+                        type="tel"
+                        class="form-control"
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        ngModel=""
+                        mask="(000) 000 00 00"
+                        [required]="true"
                       />
                     </div>
                   </div>
@@ -102,16 +159,18 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="phone1" class="form-label"
-                      >Telefon Numarası 1</label
-                    >
+                    <label for="city" class="form-label">Şehir</label>
                     <div class="input-group">
-                      <span class="input-group-text"> +90 </span>
+                      <span class="input-group-text">
+                        <i class="bi bi-geo-alt"></i>
+                      </span>
                       <input
-                        type="tel"
+                        type="text"
                         class="form-control"
-                        id="phone1"
-                        placeholder="5XX XXX XX XX"
+                        id="city"
+                        name="city"
+                        ngModel
+                        placeholder="Şehir"
                         required
                       />
                     </div>
@@ -119,20 +178,59 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="phone2" class="form-label"
-                      >Telefon Numarası 2</label
-                    >
+                    <label for="district" class="form-label">İlçe</label>
                     <div class="input-group">
-                      <span class="input-group-text"> +90 </span>
+                      <span class="input-group-text">
+                        <i class="bi bi-geo"></i>
+                      </span>
                       <input
-                        type="tel"
+                        type="text"
                         class="form-control"
-                        id="phone2"
-                        placeholder="5XX XXX XX XX"
+                        id="district"
+                        name="district"
+                        ngModel
+                        placeholder="İlçe"
                         required
                       />
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="fullAddress" class="form-label">Açık Adres</label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-house"></i>
+                  </span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="fullAddress"
+                    name="fullAddress"
+                    ngModel
+                    placeholder="Mahalle, sokak, no vb."
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="driverLicenceIssueDate" class="form-label"
+                  >Ehliyet Veriliş Tarihi</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-card-checklist"></i>
+                  </span>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="driverLicenceIssueDate"
+                    name="driverLicenceIssueDate"
+                    ngModel
+                    required
+                  />
                 </div>
               </div>
 
@@ -143,17 +241,25 @@
                     <i class="bi bi-lock"></i>
                   </span>
                   <input
-                    type="password"
+                    [type]="showPassword() ? 'text' : 'password'"
                     class="form-control"
                     id="registerPassword"
+                    name="password"
+                    ngModel
+                    minlength="6"
                     placeholder="Güçlü bir şifre oluşturun"
                     required
                   />
                   <button
                     type="button"
                     class="input-group-text password-toggle"
+                    (click)="togglePassword()"
                   >
+                    @if(showPassword()){
+                    <i class="bi bi-eye-slash"></i>
+                    }@else {
                     <i class="bi bi-eye"></i>
+                    }
                   </button>
                 </div>
               </div>
@@ -167,40 +273,36 @@
                     <i class="bi bi-lock-fill"></i>
                   </span>
                   <input
-                    type="password"
+                    [type]="showConfirmPassword() ? 'text' : 'password'"
                     class="form-control"
                     id="confirmPassword"
+                    name="confirmPassword"
+                    ngModel
                     placeholder="Şifrenizi tekrar girin"
                     required
                   />
                   <button
                     type="button"
                     class="input-group-text password-toggle"
+                    (click)="toggleConfirmPassword()"
                   >
+                    @if(showConfirmPassword()){
+                    <i class="bi bi-eye-slash"></i>
+                    }@else {
                     <i class="bi bi-eye"></i>
+                    }
                   </button>
                 </div>
               </div>
 
-              <!-- Password Strength Indicator -->
-              <div class="password-strength">
-                <div class="strength-label">Şifre Gücü:</div>
-                <div class="strength-bars">
-                  <div class="strength-bar"></div>
-                  <div class="strength-bar"></div>
-                  <div class="strength-bar"></div>
-                  <div class="strength-bar"></div>
-                </div>
-                <div class="strength-text">Zayıf</div>
-              </div>
-
-              <!-- Terms and Privacy -->
               <div class="terms-section">
                 <div class="form-check">
                   <input
                     class="form-check-input"
                     type="checkbox"
                     id="agreeTerms"
+                    name="agreeTerms"
+                    ngModel
                     required
                   />
                   <label class="form-check-label" for="agreeTerms">
@@ -223,8 +325,19 @@
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-primary btn-auth">
-                <i class="bi bi-person-plus me-2"></i>Hesap Oluştur
+              <button
+                type="submit"
+                class="btn btn-primary btn-auth"
+                [disabled]="loading()"
+              >
+                @if(loading()){
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                }@else {
+                <i class="bi bi-person-plus me-2"></i>Hesap Oluştur }
               </button>
             </form>
           </div>

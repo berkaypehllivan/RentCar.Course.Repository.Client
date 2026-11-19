@@ -111,7 +111,7 @@ export default class Create {
         ...initialCustomerModel,
         id: res.data!.customerId,
         fullName: customer.fullName,
-        address: customer.fullAddress,
+        fullAddress: customer.fullAddress,
         phoneNumber: customer.phoneNumber,
         email: customer.email,
       });

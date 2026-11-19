@@ -3,12 +3,14 @@ import { EntityModel } from './entity.model';
 export interface CustomerModel extends EntityModel {
   firstName: string;
   lastName: string;
-  fullName:string;
+  fullName: string;
   identityNumber: string;
   dateOfBirth: string;
   email: string;
   phoneNumber: string;
-  address: string;
+  city: string;
+  district: string;
+  fullAddress: string;
   driverLicenceIssueDate: string;
 }
 
@@ -21,7 +23,9 @@ export const initialCustomerModel: CustomerModel = {
   dateOfBirth: '',
   email: '',
   phoneNumber: '',
-  address: '',
+  city: '',
+  district: '',
+  fullAddress: '',
   driverLicenceIssueDate: '',
   createdAt: '',
   createdBy: '',
