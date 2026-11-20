@@ -1,0 +1,31 @@
+<section class="progress-steps py-3 bg-white border-bottom">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <div class="steps-container d-flex align-items-center gap-4">
+          <div class="step" [class.active]="currentStep() === 1">
+            <div class="step-number">1</div>
+            <div class="step-label">ARAÇ SEÇİMİ</div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step" [class.active]="currentStep() === 2">
+            <div class="step-number">2</div>
+            <div class="step-label">GÜVENCE PAKETLERİ</div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step" [class.active]="currentStep() === 3">
+            <div class="step-number">3</div>
+            <div class="step-label">ÜCRET&EKSTRA</div>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step" [class.active]="currentStep() === 4">
+            <div class="step-number">4</div>
+            <div class="step-label">SÜRÜCÜ DETAY</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<router-outlet></router-outlet>

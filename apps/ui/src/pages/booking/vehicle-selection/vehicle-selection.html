@@ -1,0 +1,106 @@
+<!-- Booking Form -->
+<section class="booking-section py-4 bg-light">
+  <div class="container">
+    <div class="justify-content-center">
+      <app-booking-search-form [initialCriteria]="criteria()" />
+    </div>
+  </div>
+</section>
+
+<!-- Filters and Cars -->
+<section class="cars-listing py-4">
+  <div class="container">
+    <!-- Filter Bar -->
+    <div class="filter-bar mb-4">
+      <div class="row align-items-center">
+        <div class="col-md-2">
+          <div class="car-count">
+            <span class="count-number">{{filteredVehicles().length}}</span>
+            <span class="count-label">TEKLİF</span>
+          </div>
+        </div>
+        <div class="col-md-10">
+          <div class="filter-options d-flex align-items-center gap-3 flex-wrap">
+            <div class="filter-dropdown">
+              <select
+                class="form-select form-select-sm"
+                [(ngModel)]="selectedCategory"
+              >
+                <option value="">ARAÇ TİPİ (TÜMÜ)</option>
+                @for (category of categories(); track category) {
+                <option [value]="category">{{ category }}</option>
+                }
+              </select>
+            </div>
+            <div class="filter-dropdown">
+              <select
+                class="form-select form-select-sm"
+                [(ngModel)]="selectedBrand"
+              >
+                <option value="">MARKA (TÜMÜ)</option>
+                @for (brand of brands(); track brand) {
+                <option [value]="brand">{{ brand }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cars-grid-layout">
+      @if (loading()) {
+      <p class="text-center text-muted py-5">Araçlar yükleniyor...</p>
+      } @else {
+      <div class="row g-3">
+        @for (vehicle of filteredVehicles(); track vehicle.id) {
+        <div class="col-lg-3 col-md-6">
+          <div class="car-card-grid">
+            <div class="car-header">
+              <h6 class="car-name">{{ vehicle.brand }} {{ vehicle.model }}</h6>
+              <p class="car-description">
+                {{ vehicle.modelYear }} | {{ vehicle.categoryName }}<br />
+                {{ vehicle.transmission }} | {{ vehicle.fuelType }} | {{
+                vehicle.seatCount }} Koltuk
+              </p>
+            </div>
+            <div class="car-image-wrapper">
+              <img
+                [src]="getVehiclesImage(vehicle)"
+                [alt]="vehicle.brand + ' ' + vehicle.model"
+                class="car-img"
+              />
+            </div>
+            <div class="car-price-section">
+              <div class="price-display">
+                <span class="price-period">Günlük</span>
+                <span class="price-main"
+                  >{{vehicle.dailyPrice| trCurrency:'₺'}}</span
+                >
+              </div>
+              <span class="price-period">Toplam</span>
+              <div class="price-total">
+                {{vehicle.totalPrice| trCurrency:'₺'}}
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary btn-sm w-100 mt-2"
+                (click)="select(vehicle)"
+              >
+                SEÇ
+              </button>
+            </div>
+          </div>
+        </div>
+        } @empty {
+        <div class="col-12">
+          <p class="text-center text-muted py-5">
+            Kriterlere uygun araç bulunamadı.
+          </p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</section>

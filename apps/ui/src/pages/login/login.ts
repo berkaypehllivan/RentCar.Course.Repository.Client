@@ -5,7 +5,7 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpService } from '@shared/lib/services/http';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
@@ -28,6 +28,7 @@ export default class Login {
 
   readonly #http = inject(HttpService);
   readonly #router = inject(Router);
+  readonly #route = inject(ActivatedRoute);
   readonly #token = inject(TokenService);
   readonly #common = inject(CustomerCommon);
 
@@ -41,7 +42,12 @@ export default class Login {
       (res) => {
         this.#token.setToken(res.token, this.rememberMe());
         this.#common.decodeToken(res.token);
-        this.#router.navigateByUrl('/');
+
+        const returnUrl = this.#route.snapshot.queryParamMap.get('returnUrl');
+        const targetUrl =
+          returnUrl && returnUrl.startsWith('/') ? returnUrl : '/';
+
+        this.#router.navigateByUrl(targetUrl);
         this.loading.set(false);
       },
       () => this.loading.set(false),

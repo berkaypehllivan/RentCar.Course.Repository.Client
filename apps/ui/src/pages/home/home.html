@@ -1,83 +1,8 @@
-<!-- Hero Section -->
 <section class="hero-section">
   <div class="hero-overlay">
     <div class="container">
       <div class="justify-content-center">
-        <div class="booking-card">
-          <div class="booking-header p-3 bg-primary text-white">
-            <h4 class="mb-0 text-center">
-              <i class="bi bi-calendar-check me-2"></i>
-              Araç Kiralama - Rent A Car
-            </h4>
-          </div>
-          <div class="booking-form p-4">
-            <form>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <div class="form-tabs d-flex">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary active me-2"
-                    >
-                      Yurt İçi
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row g-3 align-items-end">
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="form-label text-muted small"
-                      >Alış & Dönüş</label
-                    >
-                    <select class="form-control">
-                      <option>Kayseri Havalimanı</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="form-label text-muted small"
-                      >Alış tarihi saati</label
-                    >
-                    <div class="d-flex">
-                      <input type="date" class="form-control" />
-                      <select class="form-control">
-                        <option>00:00</option>
-                        <option>00:30</option>
-                        <option>01:00</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="form-label text-muted small"
-                      >Dönüş tarihi saati</label
-                    >
-                    <div class="d-flex">
-                      <input type="date" class="form-control" />
-                      <select class="form-control">
-                        <option>00:00</option>
-                        <option>00:30</option>
-                        <option>01:00</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                  <button type="button" class="btn btn-primary btn-lg fw-bold">
-                    ARAÇLARI GÖSTER
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+        <app-booking-search-form />
       </div>
     </div>
   </div>

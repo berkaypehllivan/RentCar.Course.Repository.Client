@@ -17,6 +17,10 @@ export const appRoutes: Route[] = [
         path: 'register',
         loadComponent: () => import('./pages/register/register'),
       },
+      {
+        path: 'booking',
+        loadChildren: () => import('./pages/booking/router'),
+      },
     ],
   },
 ];

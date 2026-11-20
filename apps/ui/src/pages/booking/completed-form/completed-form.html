@@ -1,0 +1,248 @@
+@if (booking(); as data) {
+<!-- Header -->
+<section class="confirmation-header py-4 bg-success text-white">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <div class="success-message d-flex align-items-center">
+          <i class="bi bi-check-circle-fill fs-1 me-3"></i>
+          <div>
+            <h1 class="h3 mb-1">Rezervasyonunuz Başarıyla Tamamlandı!</h1>
+            <p class="mb-0">
+              Rezervasyon numaranız:
+              <strong>{{ data.reservationNumber }}</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Confirmation Details -->
+<section class="confirmation-details py-5">
+  <div class="container">
+    <!-- Reservation Summary -->
+    <div class="info-card mb-4">
+      <div class="card-header">
+        <h5>
+          <i class="bi bi-clipboard-check text-primary me-2"></i>Rezervasyon
+          Detayları
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="reservation-info">
+              <h6 class="info-title">Araç Bilgileri</h6>
+              <div class="info-item">
+                <strong
+                  >{{ data.vehicle.brand }} {{ data.vehicle.model }}</strong
+                >
+              </div>
+              <div class="info-item">
+                <i class="bi bi-people-fill text-primary"></i>
+                <span>{{ data.vehicle.seatCount }} Kişi</span>
+              </div>
+              <div class="info-item">
+                <i class="bi bi-gear-fill text-primary"></i>
+                <span>{{ data.vehicle.transmission }} Şanzıman</span>
+              </div>
+              <div class="info-item">
+                <i class="bi bi-fuel-pump-fill text-primary"></i>
+                <span>{{ data.vehicle.fuelType }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="reservation-info">
+              <h6 class="info-title">Kiralama Detayları</h6>
+              @if (branchName()) {
+              <div class="info-item">
+                <i class="bi bi-geo-alt-fill text-primary"></i>
+                <span>{{ branchName() }}</span>
+              </div>
+              }
+              <div class="info-item">
+                <i class="bi bi-calendar3 text-primary"></i>
+                <span>{{ formattedPickUp() }}</span>
+              </div>
+              <div class="info-item">
+                <i class="bi bi-calendar3 text-primary"></i>
+                <span>{{ formattedDelivery() }}</span>
+              </div>
+              <div class="info-item">
+                <i class="bi bi-clock text-primary"></i>
+                <span
+                  >{{ data.totalDay }} Gün ({{ data.totalDay * 24 }} Saat)</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Driver Information -->
+    <div class="info-card mb-4">
+      <div class="card-header">
+        <h5>
+          <i class="bi bi-person-fill text-primary me-2"></i>Sürücü Bilgileri
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="driver-info">
+              <div class="info-item">
+                <span class="label">Ad Soyad:</span>
+                <span class="value">{{ customer().fullName || '-' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">E-posta:</span>
+                <span class="value">{{ customer().email || '-' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Information -->
+    <div class="info-card mb-4">
+      <div class="card-header">
+        <h5>
+          <i class="bi bi-credit-card-fill text-primary me-2"></i>Ödeme
+          Bilgileri
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="payment-info">
+              <div class="info-item">
+                <span class="label">Ödeme Yöntemi:</span>
+                <span class="value">
+                  <i class="bi bi-credit-card me-1"></i>
+                  Kredi Kartı (**** {{ data.cardLastFour }})
+                </span>
+              </div>
+              <div class="info-item">
+                <span class="label">Ödeme Durumu:</span>
+                <span class="value text-success">
+                  <i class="bi bi-check-circle-fill me-1"></i>
+                  Başarılı
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="payment-summary">
+              <div class="price-row">
+                <span>Araç Kirası ({{ data.totalDay }} Gün):</span>
+                <span>{{ data.vehicleTotalPrice | trCurrency:'₺' }}</span>
+              </div>
+              @if (data.protectionPackage; as pkg) {
+              <div class="price-row">
+                <span>{{ pkg.name }}:</span>
+                <span
+                  >{{ data.protectionPackageTotalPrice | trCurrency:'₺' }}</span
+                >
+              </div>
+              } @for (extra of data.extras; track extra.id) {
+              <div class="price-row">
+                <span>{{ extra.name }}:</span>
+                <span>{{ extra.price | trCurrency:'₺' }}</span>
+              </div>
+              }
+              <div class="price-row total">
+                <span>TOPLAM ÖDENDİ:</span>
+                <span>{{ data.grandTotalPrice | trCurrency:'₺' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Important Notes -->
+    <div class="info-card mb-4">
+      <div class="card-header">
+        <h5>
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          >Önemli Bilgiler
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="important-notes">
+          <div class="note-item">
+            <i class="bi bi-info-circle-fill text-info"></i>
+            <div>
+              <strong>Araç Teslim Alma:</strong>
+              <p>
+                {{ branchName() || 'İlgili' }} ofisimizden aracınızı teslim
+                alabilirsiniz. Ofis açılış saatleri: 06:00 - 24:00
+              </p>
+            </div>
+          </div>
+          <div class="note-item">
+            <i class="bi bi-card-text text-primary"></i>
+            <div>
+              <strong>Gerekli Belgeler:</strong>
+              <p>
+                T.C. Kimlik kartı, geçerli ehliyet ve kredi kartı (rezervasyon
+                yapılan kart) yanınızda bulundurmanız gerekmektedir.
+              </p>
+            </div>
+          </div>
+          <div class="note-item">
+            <i class="bi bi-clock text-warning"></i>
+            <div>
+              <strong>İptal Politikası:</strong>
+              <p>
+                Rezervasyonunuzu teslim alma tarihinden 24 saat öncesine kadar
+                ücretsiz iptal edebilirsiniz.
+              </p>
+            </div>
+          </div>
+          <div class="note-item">
+            <i class="bi bi-telephone text-success"></i>
+            <div>
+              <strong>İletişim:</strong>
+              <p>
+                Herhangi bir sorunuz için 7/24 müşteri hizmetlerimizi
+                arayabilirsiniz:
+                <strong>0850 222 3344</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer CTA -->
+<section class="footer-cta py-4 bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h5 class="mb-1">Yeni Bir Rezervasyon Yapmak İster misiniz?</h5>
+        <p class="text-muted mb-0">
+          Geniş araç filomuzdan size uygun aracı bulun ve avantajlı fiyatlarla
+          kiralayın.
+        </p>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="startNewBooking()"
+        >
+          <i class="bi bi-plus-circle me-2"></i>Yeni Rezervasyon
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+}

@@ -1,0 +1,90 @@
+<section class="extras-section py-5">
+  <div class="container">
+    <div class="row">
+      <!-- Left Column - Extras -->
+      <div class="col-lg-8">
+        @if (loading()) {
+        <p class="text-center text-muted py-5">Ek hizmetler yükleniyor...</p>
+        } @else {
+        <div class="extras-card">
+          <div class="card-header">
+            <h5>
+              <i class="bi bi-plus-circle text-primary me-2"></i>Ek Hizmetler &
+              Ekstralar
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              @for (extra of extras(); track extra.id) {
+              <div class="col-md-6">
+                <div
+                  class="service-item"
+                  [class.selected]="isSelected(extra.id)"
+                >
+                  <div class="service-info">
+                    <h6>{{ extra.name }}</h6>
+                    <p class="text-muted small">{{ extra.description }}</p>
+                  </div>
+                  <div
+                    class="service-action d-flex flex-column align-items-end gap-2"
+                  >
+                    <div class="price-tag">
+                      {{ extra.price | trCurrency:'₺' }}
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-sm"
+                      [class.btn-primary]="!isSelected(extra.id)"
+                      [class.btn-success]="isSelected(extra.id)"
+                      (click)="toggleExtra(extra)"
+                    >
+                      @if (isSelected(extra.id)) {
+                      <i class="bi bi-check-lg me-1"></i>SEÇİLDİ } @else { EKLE
+                      }
+                    </button>
+                  </div>
+                </div>
+              </div>
+              } @empty {
+              <div class="col-12">
+                <p class="text-center text-muted py-4 mb-0">
+                  Şu anda seçilebilir ek hizmet bulunmamaktadır.
+                </p>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Right Column - Summary -->
+      <div class="col-lg-4">
+        <app-booking-summary>
+          <div summary-actions class="d-grid gap-2 mt-4">
+            @if (!isLoggedIn()) {
+            <div class="alert alert-warning py-2 px-3 small mb-1">
+              <i class="bi bi-info-circle me-1"></i>
+              Ödeme adımına geçebilmek için hesabınıza giriş yapmalısınız.
+            </div>
+            }
+
+            <button type="button" class="btn btn-primary" (click)="proceed()">
+              @if (isLoggedIn()) { ÖDEMEYE GEÇ
+              <i class="bi bi-arrow-right ms-1"></i> } @else { GİRİŞ YAP VE
+              ÖDEMEYE GEÇ <i class="bi bi-box-arrow-in-right ms-1"></i>
+              }
+            </button>
+
+            <a
+              routerLink="/booking/protection-packages"
+              class="btn btn-outline-secondary btn-sm"
+            >
+              Güvence Paketlerine Dön
+            </a>
+          </div>
+        </app-booking-summary>
+      </div>
+    </div>
+  </div>
+</section>

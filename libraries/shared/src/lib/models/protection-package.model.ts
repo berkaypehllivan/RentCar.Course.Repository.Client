@@ -4,7 +4,14 @@ export interface ProtectionPackageModel extends EntityModel {
   name: string;
   price: number;
   isRecommended: boolean;
-  orderNumber:number;
+  orderNumber: number;
+  coverages: string[];
+}
+export interface ProtectionPackageOptionModel {
+  id: string;
+  name: string;
+  price: number;
+  isRecommended: boolean;
   coverages: string[];
 }
 

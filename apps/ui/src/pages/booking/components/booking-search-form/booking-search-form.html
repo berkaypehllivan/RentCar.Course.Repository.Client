@@ -1,0 +1,96 @@
+<div class="booking-card">
+  <div class="booking-header p-3 bg-primary text-white">
+    <h4 class="mb-0 text-center">
+      <i class="bi bi-calendar-check me-2"></i>
+      Araç Kiralama - Rent A Car
+    </h4>
+  </div>
+  <div class="booking-form p-4">
+    <form #form="ngForm" (ngSubmit)="search(form)">
+      @if(error()){
+      <div class="text-danger small mt-2">{{ error() }}</div>
+      }
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="form-tabs d-flex">
+            <button type="button" class="btn btn-outline-primary active me-2">
+              Yurt İçi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="form-label text-muted small">Alış & Dönüş</label>
+            <select
+              class="form-control"
+              name="branchId"
+              [(ngModel)]="branchId"
+              required
+            >
+              @for (branch of branches(); track branch.id) {
+              <option [value]="branch.id">{{ branch.name }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="form-label text-muted small">Alış tarihi saati</label>
+            <div class="d-flex">
+              <input
+                type="date"
+                class="form-control"
+                name="pickUpDate"
+                [(ngModel)]="pickUpDate"
+                [min]="today"
+                required
+              />
+              <input
+                type="time"
+                class="form-control"
+                name="pickUpTime"
+                [(ngModel)]="pickUpTime"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="form-label text-muted small"
+              >Dönüş tarihi saati</label
+            >
+            <div class="d-flex">
+              <input
+                type="date"
+                class="form-control"
+                name="deliveryDate"
+                [(ngModel)]="deliveryDate"
+                [min]="pickUpDate()"
+                required
+              />
+              <input
+                type="time"
+                class="form-control"
+                name="deliveryTime"
+                [(ngModel)]="deliveryTime"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary btn-lg fw-bold">
+            ARAÇLARI GÖSTER
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

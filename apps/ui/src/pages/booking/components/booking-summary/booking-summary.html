@@ -1,0 +1,74 @@
+@if (vehicle(); as car) {
+<div class="summary-card sticky-top">
+  <div class="card-header">
+    <h5>Rezervasyon Özeti</h5>
+  </div>
+  <div class="card-body">
+    <div class="car-summary mb-4">
+      <img
+        [src]="getVehicleImage(car)"
+        [alt]="car.brand + ' ' + car.model"
+        class="img-fluid mb-3"
+      />
+      <h6>{{ car.brand }} {{ car.model }}</h6>
+      <p class="text-muted small mb-0">
+        {{ car.modelYear }} | {{ car.categoryName }} • {{ car.transmission }} •
+        {{ car.fuelType }}
+      </p>
+    </div>
+
+    <div class="rental-details mb-4">
+      @if (branchName()) {
+      <div class="detail-row">
+        <i class="bi bi-geo-alt-fill text-primary"></i>
+        <span>{{ branchName() }}</span>
+      </div>
+      }
+      <div class="detail-row">
+        <i class="bi bi-calendar3 text-primary"></i>
+        <span>{{ formattedPickUp() }}</span>
+      </div>
+      <div class="detail-row">
+        <i class="bi bi-calendar3 text-primary"></i>
+        <span>{{ formattedDelivery() }}</span>
+      </div>
+      <div class="detail-row">
+        <i class="bi bi-clock text-primary"></i>
+        <span>{{ totalDay() }} Gün</span>
+      </div>
+      @if (protectionPackage(); as pkg) {
+      <div class="detail-row">
+        <i class="bi bi-shield-fill-check text-success"></i>
+        <span>{{ pkg.name }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="price-summary">
+      <div class="price-row">
+        <span>Araç Kirası ({{ totalDay() }} Gün)</span>
+        <span>{{ vehicleTotalPrice() | trCurrency:'₺' }}</span>
+      </div>
+
+      @if (protectionPackage(); as pkg) {
+      <div class="price-row">
+        <span>{{ pkg.name }}</span>
+        <span>{{ protectionPackageTotalPrice() | trCurrency:'₺' }}</span>
+      </div>
+      } @for (extra of selectedExtras(); track extra.id) {
+      <div class="price-row">
+        <span>{{ extra.name }}</span>
+        <span>{{ extra.price | trCurrency:'₺' }}</span>
+      </div>
+      }
+
+      <div class="price-row total">
+        <span>TOPLAM</span>
+        <span>{{ grandTotalPrice() | trCurrency:'₺' }}</span>
+      </div>
+    </div>
+
+    <ng-content select="[summary-actions]" />
+  </div>
+</div>
+}

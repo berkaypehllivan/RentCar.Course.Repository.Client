@@ -1,0 +1,189 @@
+<section class="driver-details-section py-5">
+  <div class="container">
+    <form #paymentForm="ngForm" (ngSubmit)="submit(paymentForm)">
+      <div class="row">
+        <!-- Main Form -->
+        <div class="col-lg-8">
+          @if (error(); as errorMessage) {
+          <div class="alert alert-danger mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage
+            }}
+          </div>
+          }
+
+          <!-- Credit Card Information -->
+          <div class="form-card mb-4">
+            <div
+              class="form-header"
+              style="flex-direction: column; align-items: start"
+            >
+              <h5>
+                <i class="bi bi-credit-card-fill text-primary me-2"></i>
+                Kredi Kartı Bilgileri
+              </h5>
+              <p class="form-subtitle">
+                Ödeme yapılan kredi kartının üzerindeki isim ile aracı
+                kiralayacak kişi aynı olmalıdır. Ödeme yapılan kredi kartının
+                araç tesliminde ofiste gösterilmesi talep edilecektir.
+              </p>
+            </div>
+            <div class="form-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="cardOwner" class="form-label"
+                    >Kart Üzerindeki Ad Soyad *</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cardOwner"
+                    name="cardOwner"
+                    [ngModel]="cardOwner()"
+                    (ngModelChange)="cardOwner.set($event)"
+                    placeholder="Örn: Kerem Aksoy"
+                    required
+                  />
+                </div>
+
+                <div class="col-12">
+                  <label for="cardNumber" class="form-label"
+                    >Kredi Kartı Numarası *</label
+                  >
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="cardNumber"
+                      name="cardNumber"
+                      inputmode="numeric"
+                      [ngModel]="cardNumber()"
+                      (ngModelChange)="onCardNumberInput($event)"
+                      placeholder="0000 0000 0000 0000"
+                      maxlength="19"
+                      required
+                    />
+                    <span class="input-group-text">
+                      <i class="bi bi-credit-card text-muted"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="cardMonth" class="form-label">Ay *</label>
+                  <select
+                    class="form-select"
+                    id="cardMonth"
+                    name="cardMonth"
+                    [ngModel]="cardMonth()"
+                    (ngModelChange)="cardMonth.set($event)"
+                    required
+                  >
+                    <option value="">Ay</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="cardYear" class="form-label">Yıl *</label>
+                  <select
+                    class="form-select"
+                    id="cardYear"
+                    name="cardYear"
+                    [ngModel]="cardYear()"
+                    (ngModelChange)="cardYear.set($event)"
+                    required
+                  >
+                    <option value="">Yıl</option>
+                    @for (year of years; track year) {
+                    <option [value]="year">{{ year }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="ccv" class="form-label">CVV *</label>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="ccv"
+                      name="ccv"
+                      inputmode="numeric"
+                      [ngModel]="ccv()"
+                      (ngModelChange)="onCcvInput($event)"
+                      placeholder="CVV"
+                      maxlength="4"
+                      required
+                    />
+                    <span class="input-group-text">
+                      <i
+                        class="bi bi-info-circle"
+                        title="Kartınızın arkasındaki güvenlik kodu"
+                      ></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reservation Note -->
+          <div class="form-card mb-4">
+            <div class="form-header">
+              <h5>
+                <i class="bi bi-chat-left-text-fill text-primary me-2"></i
+                >Rezervasyon Notu (İsteğe Bağlı)
+              </h5>
+            </div>
+            <div class="form-body">
+              <textarea
+                class="form-control border"
+                id="note"
+                name="note"
+                rows="3"
+                [ngModel]="note()"
+                (ngModelChange)="note.set($event)"
+                placeholder="Eklemek istediğiniz özel talepleri yazabilirsiniz (Örn: Bebek koltuğu önceden takılsın)."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Sidebar -->
+        <div class="col-lg-4">
+          <app-booking-summary>
+            <div summary-actions class="d-grid gap-2 mt-4">
+              <button
+                type="submit"
+                class="btn btn-primary btn-lg"
+                [disabled]="!paymentForm.valid || submitting()"
+              >
+                @if (submitting()) {
+                <span class="spinner-border spinner-border-sm me-2"></span
+                >İŞLENİYOR... } @else {
+                <i class="bi bi-check-circle me-2"></i>REZERVASYONU TAMAMLA }
+              </button>
+              <a
+                routerLink="/booking/pricing-extras"
+                class="btn btn-outline-secondary btn-sm"
+              >
+                Ek Hizmetlere Dön
+              </a>
+            </div>
+          </app-booking-summary>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

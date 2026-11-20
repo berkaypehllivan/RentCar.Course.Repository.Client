@@ -1,0 +1,170 @@
+<section class="protection-packages py-5">
+  <div class="container">
+    @if (loading()) {
+    <p class="text-center text-muted py-5">Güvence paketleri yükleniyor...</p>
+    } @else {
+    <div class="row g-4">
+      @for (pkg of packages(); track pkg.id) {
+      <div class="col-lg-3 col-md-6">
+        <div
+          class="protection-card"
+          [class.recommended]="pkg.isRecommended"
+          (click)="select(pkg)"
+        >
+          @if (pkg.isRecommended) {
+          <div class="recommended-badge">Önerilen</div>
+          }
+
+          <div class="protection-header">
+            <div class="package-selector">
+              <input
+                type="radio"
+                class="form-check-input"
+                name="protection"
+                [checked]="selectedPackage()?.id === pkg.id"
+              />
+            </div>
+            <h5 class="package-title">{{ pkg.name }}</h5>
+          </div>
+
+          <div class="protection-features">
+            @for (coverage of allCoverages(); track coverage) { @if
+            (pkg.coverages.includes(coverage)) {
+            <div class="feature-item included">
+              <i class="bi bi-check-circle"></i>
+              <span>{{ coverage }}</span>
+            </div>
+            } @else {
+            <div class="feature-item not-included">
+              <i class="bi bi-x-circle"></i>
+              <span>{{ coverage }}</span>
+            </div>
+            } }
+          </div>
+
+          <div class="protection-footer">
+            @if (pkg.price === 0) {
+            <div class="daily-price">Dahil</div>
+            } @else {
+            <div class="daily-price">
+              {{ pkg.price | trCurrency:'₺' }}
+              <span class="currency">/ Gün</span>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      } @empty {
+      <div class="col-12">
+        <p class="text-center text-muted py-5">
+          Şu anda tanımlı güvence paketi bulunmuyor.
+        </p>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Rezervasyon Ayrıntıları -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="reservation-details">
+          <h6 class="section-title">Rezervasyon Ayrıntıları</h6>
+          <div class="row">
+            <div class="col-md-6">
+              @if (vehicle(); as v) {
+              <div class="detail-item">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span>{{ v.brand }} {{ v.model }}</span>
+              </div>
+              }
+            </div>
+            <div class="col-md-6">
+              @if (selectedPackage(); as pkg) {
+              <div class="detail-item">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span>{{ pkg.name }}</span>
+              </div>
+              @if (pkg.price > 0) {
+              <div class="detail-item">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span
+                  >Güvence toplamı: {{ packageTotal() | trCurrency:'₺' }}</span
+                >
+              </div>
+              } }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-end mt-4">
+      <button
+        type="button"
+        class="btn btn-primary btn-lg fw-bold"
+        (click)="continue()"
+      >
+        DEVAM ET
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Paket yükseltme penceresi -->
+@if (showUpgradeModal()) {
+<div class="modal-backdrop fade show"></div>
+<div
+  class="modal fade show d-block"
+  tabindex="-1"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">GÜVENCE PAKETİ SEÇMEDİNİZ, EMİN MİSİNİZ?</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Kapat"
+          (click)="closeModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        @if (recommendedPackage(); as recommended) {
+        <p class="mb-4">
+          Ek güvence olmadan devam ediyorsunuz.
+          <strong>{{ recommended.name }}</strong> paketini ekleyerek kapsamınızı
+          genişletebilirsiniz.
+        </p>
+        <div class="package-comparison p-3 bg-light rounded">
+          <div class="row align-items-center">
+            <div class="col-8"><strong>{{ recommended.name }}</strong></div>
+            <div class="col-4 text-end">
+              <strong>{{ recommended.price | trCurrency:'₺' }}</strong>
+              <span class="text-muted"> / Gün</span>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      <div class="modal-footer border-0">
+        <button
+          type="button"
+          class="btn btn-primary flex-fill"
+          (click)="addRecommended()"
+        >
+          Ekle
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary flex-fill"
+          (click)="continueWithoutUpgrade()"
+        >
+          Eklemeden Devam Et
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}
