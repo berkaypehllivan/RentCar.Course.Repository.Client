@@ -12,8 +12,21 @@ export interface CustomerModel extends EntityModel {
   district: string;
   fullAddress: string;
   driverLicenceIssueDate: string;
+  totalReservationCount?: number;
 }
 
+export type CustomerProfileUpdateModel = Pick<
+  CustomerModel,
+  | 'firstName'
+  | 'lastName'
+  | 'dateOfBirth'
+  | 'email'
+  | 'phoneNumber'
+  | 'city'
+  | 'district'
+  | 'fullAddress'
+  | 'driverLicenceIssueDate'
+>;
 export const initialCustomerModel: CustomerModel = {
   id: '',
   firstName: '',

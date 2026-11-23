@@ -6,11 +6,7 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
-import {
-  HttpContextToken,
-  provideHttpClient,
-  withInterceptors,
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { httpInterceptor } from '@shared/lib/interceptors/http-interceptor';
 import { authInterceptor } from '@shared/lib/interceptors/auth-interceptor';
 import { errorInterceptor } from '@shared/lib/interceptors/error-interceptor';
@@ -32,4 +28,3 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'tr-TR' },
   ],
 };
-

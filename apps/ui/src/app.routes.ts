@@ -21,6 +21,10 @@ export const appRoutes: Route[] = [
         path: 'booking',
         loadChildren: () => import('./pages/booking/router'),
       },
+      {
+        path: 'profile',
+        loadChildren: () => import('./pages/profile/router'),
+      },
     ],
   },
 ];

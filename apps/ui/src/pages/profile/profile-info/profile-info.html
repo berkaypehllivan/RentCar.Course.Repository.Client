@@ -1,0 +1,237 @@
+<div class="profile-content">
+  <div class="content-header">
+    <h3><i class="bi bi-person-fill text-primary me-2"></i>Profil Bilgileri</h3>
+    <p class="text-muted">
+      Kişisel bilgilerini güncel tutarak daha hızlı rezervasyon yapabilirsin.
+    </p>
+  </div>
+
+  @if (loading() && !profile()) {
+  <p class="text-center text-muted py-5">Profil bilgileri yükleniyor...</p>
+  } @else{
+
+  <form
+    #profileForm="ngForm"
+    (ngSubmit)="submit(profileForm)"
+    class="profile-form"
+  >
+    <!-- Personal Information -->
+    <div class="form-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-person-circle text-primary me-2"></i>Kişisel Bilgiler
+        </h5>
+        <small class="text-muted">Temel kişisel bilgilerin</small>
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="firstName" class="form-label">Ad *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              name="firstName"
+              [ngModel]="firstName()"
+              (ngModelChange)="firstName.set($event)"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="lastName" class="form-label">Soyad *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              name="lastName"
+              [ngModel]="lastName()"
+              (ngModelChange)="lastName.set($event)"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="identityNumber" class="form-label"
+              >T.C. Kimlik Numarası *</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="identityNumber"
+              [value]="profile()?.identityNumber || ''"
+              readonly
+            />
+            <small class="form-text text-muted"
+              >T.C. Kimlik numarası değiştirilemez</small
+            >
+          </div>
+          <div class="col-md-6">
+            <label for="dateOfBirth" class="form-label">Doğum Tarihi *</label>
+            <input
+              type="date"
+              class="form-control"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              [ngModel]="dateOfBirth()"
+              (ngModelChange)="dateOfBirth.set($event)"
+              required
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="form-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-telephone-fill text-primary me-2"></i>İletişim
+          Bilgileri
+        </h5>
+        <small class="text-muted"
+          >İletişim kurabilmemiz için güncel bilgiler</small
+        >
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="email" class="form-label">E-posta Adresi *</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              [ngModel]="email()"
+              (ngModelChange)="email.set($event)"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="phoneNumber" class="form-label"
+              >Telefon Numarası *</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="phoneNumber"
+              name="phoneNumber"
+              [ngModel]="phoneNumber()"
+              (ngModelChange)="phoneNumber.set($event)"
+              mask="(000) 000 00 00"
+              [required]="true"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address Information -->
+    <div class="form-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-geo-alt-fill text-primary me-2"></i>Adres Bilgileri
+        </h5>
+        <small class="text-muted"
+          >Fatura ve teslimat işlemleri için adres bilgilerin</small
+        >
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="city" class="form-label">Şehir *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="city"
+              name="city"
+              [ngModel]="city()"
+              (ngModelChange)="city.set($event)"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="district" class="form-label">İlçe *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="district"
+              name="district"
+              [ngModel]="district()"
+              (ngModelChange)="district.set($event)"
+              required
+            />
+          </div>
+          <div class="col-12">
+            <label for="fullAddress" class="form-label">Açık Adres *</label>
+            <textarea
+              class="form-control"
+              id="fullAddress"
+              name="fullAddress"
+              rows="3"
+              [ngModel]="fullAddress()"
+              (ngModelChange)="fullAddress.set($event)"
+              placeholder="Detaylı adres bilginiz"
+              required
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- License Information -->
+    <div class="form-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-card-text text-primary me-2"></i>Ehliyet Bilgileri
+        </h5>
+        <small class="text-muted"
+          >Araç kiralama için gerekli ehliyet bilgilerin</small
+        >
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="driverLicenceIssueDate" class="form-label"
+              >Ehliyet Veriliş Tarihi *</label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="driverLicenceIssueDate"
+              name="driverLicenceIssueDate"
+              [ngModel]="driverLicenceIssueDate()"
+              (ngModelChange)="driverLicenceIssueDate.set($event)"
+              required
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="form-info">
+          @if (lastUpdatedText()) {
+          <small class="text-muted">
+            <i class="bi bi-info-circle me-1"></i>
+            Son güncelleme: {{ lastUpdatedText() }}
+          </small>
+          }
+        </div>
+        <div class="action-buttons">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!profileForm.valid || submitting()"
+          >
+            @if (submitting()) {
+            <span class="spinner-border spinner-border-sm me-1"></span
+            >Kaydediliyor... } @else {
+            <i class="bi bi-check-circle me-1"></i>Değişiklikleri Kaydet }
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  }
+</div>

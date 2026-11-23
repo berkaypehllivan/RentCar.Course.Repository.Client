@@ -1,0 +1,428 @@
+<div class="profile-content">
+  @if (loading()) {
+  <p class="text-center text-muted py-5">Rezervasyon detayları yükleniyor...</p>
+  } @else if (detail(); as rental) {
+  <div class="content-header">
+    <div class="d-flex justify-content-between align-items-start">
+      <div class="w-100">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h3 class="mb-0">
+            <i class="bi bi-receipt text-primary me-2"></i>Rezervasyon Detayı
+          </h3>
+          <a
+            routerLink="/profile/rentals"
+            class="btn btn-outline-secondary btn-sm me-3"
+          >
+            <i class="bi bi-arrow-left me-1"></i>Geri
+          </a>
+        </div>
+        <p class="text-muted mb-0">
+          {{ rental.reservationNumber }} numaralı rezervasyonun detaylı
+          bilgileri
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="reservation-detail-content">
+    <!-- Status Banner -->
+    <div class="status-banner" [class]="statusInfo().bannerClass">
+      <div class="status-icon">
+        <i class="bi" [class]="statusInfo().icon"></i>
+      </div>
+      <div class="status-info">
+        <h5>{{ statusInfo().title }}</h5>
+        <p>{{ statusInfo().description }}</p>
+      </div>
+      <div class="status-actions">
+        <a routerLink="/contact" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-telephone me-1"></i>Destek
+        </a>
+      </div>
+    </div>
+
+    <!-- Reservation Summary -->
+    <div class="detail-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-car-front text-primary me-2"></i>Araç ve Kiralama
+          Bilgileri
+        </h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="car-preview">
+              <img
+                [src]="getVehicleImage(rental.vehicle.imageUrl)"
+                [alt]="rental.vehicle.brand + ' ' + rental.vehicle.model"
+                class="car-image"
+              />
+              <div class="car-title">
+                <h6>
+                  {{ rental.vehicle.brand }} {{ rental.vehicle.model }}
+                  <small class="text-muted"
+                    >({{ rental.vehicle.modelYear }})</small
+                  >
+                </h6>
+                <div class="car-features">
+                  <span class="feature-badge"
+                    >{{ rental.vehicle.transmission }}</span
+                  >
+                  <span class="feature-badge"
+                    >{{ rental.vehicle.fuelType }}</span
+                  >
+                  <span class="feature-badge"
+                    >{{ rental.vehicle.seatCount }} Kişi</span
+                  >
+                  <span class="feature-badge">{{ rental.vehicle.plate }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <div class="rental-details-grid">
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="bi bi-geo-alt-fill text-primary"></i>
+                  Alış & Dönüş Yeri
+                </div>
+                <div class="detail-value">{{ rental.branch.name }}</div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="bi bi-calendar-event text-primary"></i>
+                  Alış Tarihi & Saati
+                </div>
+                <div class="detail-value">
+                  {{ rental.pickUpDate | date:'dd MMMM y' }} - {{
+                  rental.pickUpTime.slice(0, 5) }}
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="bi bi-calendar-check text-primary"></i>
+                  Dönüş Tarihi & Saati
+                </div>
+                <div class="detail-value">
+                  {{ rental.deliveryDate | date:'dd MMMM y' }} - {{
+                  rental.deliveryTime.slice(0, 5) }}
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="bi bi-clock text-primary"></i>
+                  Kiralama Süresi
+                </div>
+                <div class="detail-value">
+                  {{ rental.totalDay }} Gün ({{ totalHours() }} Saat)
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="bi bi-hash text-primary"></i>
+                  Rezervasyon No
+                </div>
+                <div class="detail-value">{{ rental.reservationNumber }}</div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">
+                  <i class="bi bi-calendar-plus text-primary"></i>
+                  Rezervasyon Tarihi
+                </div>
+                <div class="detail-value">
+                  {{ rental.createdAt | date:'dd MMMM y, HH:mm' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @if (rental.note) {
+        <div class="alert alert-light border mt-3 mb-0">
+          <small class="text-muted d-block mb-1">
+            <i class="bi bi-chat-left-text text-primary me-1"></i>Rezervasyon
+            Notu
+          </small>
+          <span>{{ rental.note }}</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Driver Information -->
+    <div class="detail-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-person-fill text-primary me-2"></i>Sürücü Bilgileri
+        </h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="info-group">
+              <label>Ana Sürücü</label>
+              <div class="driver-card">
+                <div class="driver-avatar">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNBRW6kw4PvewS5EGHKY7nNsJiWvrbsVIzZA&s"
+                    [alt]="rental.driver.fullName"
+                  />
+                </div>
+                <div class="driver-info">
+                  <h6>{{ rental.driver.fullName }}</h6>
+                  <p>T.C. Kimlik: {{ rental.driver.maskedIdentityNumber }}</p>
+                  <p>
+                    Doğum: {{ rental.driver.dateOfBirth | date:'dd.MM.yyyy' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="info-group">
+              <label>İletişim Bilgileri</label>
+              <div class="contact-details">
+                <div class="contact-item">
+                  <i class="bi bi-envelope"></i>
+                  <span>{{ rental.driver.email }}</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-telephone"></i>
+                  <span
+                    >{{ rental.driver.phoneNumber | mask:'(000) 000 00
+                    00'}}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Protection & Extras -->
+    <div class="detail-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-shield-check text-primary me-2"></i>Güvence Paketi &
+          Ekstralar
+        </h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="protection-package">
+              <div class="package-header">
+                <i class="bi bi-shield-fill-check text-success"></i>
+                <h6>
+                  {{ rental.protectionPackageName || 'Standart Güvence' }}
+                </h6>
+                <span class="included">
+                  @if (rental.protectionPackagePrice > 0) { {{
+                  rental.protectionPackagePrice | trCurrency:'₺' }} } @else {
+                  Dahil }
+                </span>
+              </div>
+              <ul class="package-features">
+                <li><i class="bi bi-check"></i> Zorunlu Trafik Sigortası</li>
+                <li><i class="bi bi-check"></i> Kasko Güvencesi</li>
+                <li><i class="bi bi-check"></i> 7/24 Yol Yardımı</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="extras-list">
+              <h6>Ek Hizmetler</h6>
+              @if (rental.extras.length === 0) {
+              <div class="extra-item">
+                <span class="text-muted">Ek hizmet seçilmedi</span>
+              </div>
+              } @else { @for (extra of rental.extras; track extra.name) {
+              <div class="extra-item d-flex justify-content-between">
+                <span
+                  ><i class="bi bi-check-circle text-success me-1"></i>{{
+                  extra.name }}</span
+                >
+                <strong>{{ extra.price | trCurrency:'₺' }}</strong>
+              </div>
+              } }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Details -->
+    <div class="detail-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-credit-card text-primary me-2"></i>Ödeme Detayları
+        </h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="payment-method">
+              <h6>Ödeme Yöntemi</h6>
+              <div class="payment-card">
+                <i class="bi bi-credit-card-2-front text-primary"></i>
+                <div class="card-info">
+                  <span class="card-type">Kredi Kartı</span>
+                  <span class="card-number"
+                    >{{ rental.payment.maskedCardNumber }}</span
+                  >
+                  <span class="card-holder"
+                    >{{ rental.payment.cardOwner }}</span
+                  >
+                </div>
+                <div class="payment-status success">
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span>Ödendi</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="price-breakdown">
+              <h6>Fiyat Detayı</h6>
+              <div class="price-summary">
+                <div class="price-line">
+                  <span>
+                    Araç Kirası ({{ rental.totalDay }} gün × {{
+                    rental.vehicleDailyPrice | trCurrency:'₺' }})
+                  </span>
+                  <span>{{ rental.vehicleTotalPrice | trCurrency:'₺' }}</span>
+                </div>
+                <div class="price-line">
+                  <span>Güvence Paketi</span>
+                  <span>
+                    @if (rental.protectionPackagePrice > 0) { {{
+                    rental.protectionPackagePrice | trCurrency:'₺' }} } @else {
+                    Dahil }
+                  </span>
+                </div>
+                @if (rental.extrasTotalPrice > 0) {
+                <div class="price-line">
+                  <span>Ek Hizmetler</span>
+                  <span>{{ rental.extrasTotalPrice | trCurrency:'₺' }}</span>
+                </div>
+                }
+                <div class="price-line total">
+                  <span>TOPLAM TUTAR</span>
+                  <span>{{ rental.total | trCurrency:'₺' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location & Instructions -->
+    <div class="detail-section">
+      <div class="section-header">
+        <h5>
+          <i class="bi bi-geo-alt text-primary me-2"></i>Teslim Alma Bilgileri
+        </h5>
+      </div>
+      <div class="section-content">
+        <div class="location-info">
+          <div class="location-header">
+            <h6>{{ rental.branch.name }}</h6>
+            <span class="status-badge open">Açık</span>
+          </div>
+          <div class="location-details">
+            <div class="detail-item">
+              <i class="bi bi-geo-alt-fill"></i>
+              <span>{{ rental.branch.fullAddress }}</span>
+            </div>
+            <div class="detail-item">
+              <i class="bi bi-telephone"></i>
+              <span
+                >{{ rental.branch.phoneNumber | mask:'(000) 000 00 00'}}</span
+              >
+            </div>
+          </div>
+          <div class="instructions">
+            <h6>Teslim Alma Talimatları</h6>
+            <ul>
+              <li>
+                T.C. Kimlik kartınızı ve sürücü belgenizi yanınızda bulundurun
+              </li>
+              <li>
+                Rezervasyon yapılan kredi kartını teslimat sırasında yanınızda
+                getirin
+              </li>
+              <li>
+                Teslim alma saatinden en az 15 dakika önce şubemizde bulunun
+              </li>
+              <li>
+                Araç teslim kontrol formunu personelimizle birlikte inceleyin
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    @if (canCancel()) {
+    <div class="detail-actions">
+      <div
+        class="d-flex justify-content-between align-items-center flex-wrap gap-2"
+      >
+        <div class="action-info">
+          <small class="text-muted">
+            <i class="bi bi-info-circle me-1"></i>
+            Henüz teslim alınmamış rezervasyonunuzu iptal edebilirsiniz
+          </small>
+        </div>
+        <div class="action-buttons">
+          @if (!confirmCancel()) {
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            (click)="confirmCancel.set(true)"
+          >
+            <i class="bi bi-x-circle me-1"></i>Rezervasyonu İptal Et
+          </button>
+          } @else {
+          <span class="text-danger small me-2 fw-semibold">
+            İptal etmek istediğinize emin misiniz?
+          </span>
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm me-2"
+            [disabled]="cancelling()"
+            (click)="confirmCancel.set(false)"
+          >
+            Vazgeç
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            [disabled]="cancelling()"
+            (click)="cancelReservation()"
+          >
+            @if (cancelling()) {
+            <span class="spinner-border spinner-border-sm me-1"></span>İptal
+            Ediliyor... } @else { Evet, İptal Et }
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>

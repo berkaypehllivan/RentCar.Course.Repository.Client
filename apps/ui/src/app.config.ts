@@ -1,5 +1,7 @@
 import {
   ApplicationConfig,
+  inject,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
@@ -10,6 +12,7 @@ import { authInterceptor } from '@shared/lib/interceptors/auth-interceptor';
 import { httpInterceptor } from '@shared/lib/interceptors/http-interceptor';
 import { errorInterceptor } from '@shared/lib/interceptors/error-interceptor';
 import { provideNgxMask } from 'ngx-mask';
+import { CustomerCommon } from './services/customer-common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +20,13 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideNgxMask(),
     provideRouter(appRoutes),
+    provideAppInitializer(() => {
+      const customerCommon = inject(CustomerCommon);
+      const token =
+        localStorage.getItem('response') ?? sessionStorage.getItem('response');
+
+      if (token) customerCommon.decodeToken(token);
+    }),
     provideHttpClient(
       withInterceptors([authInterceptor, httpInterceptor, errorInterceptor]),
     ),

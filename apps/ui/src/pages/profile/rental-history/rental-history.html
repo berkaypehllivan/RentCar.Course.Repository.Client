@@ -1,0 +1,284 @@
+<div class="profile-content">
+  <div class="content-header">
+    <h3>
+      <i class="bi bi-clock-history text-primary me-2"></i>Kiralama Geçmişi
+    </h3>
+    <p class="text-muted">Geçmiş ve aktif kiralama işlemlerini görüntüle</p>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="stats-overview">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-car-front"></i>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats().totalRentals }}</h4>
+            <span>Toplam Kiralama</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-lightning-charge-fill"></i>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats().activeRentals }}</h4>
+            <span>Aktif / Bekleyen</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats().totalDays }}</h4>
+            <span>Toplam Gün</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-currency-exchange"></i>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats().totalSpent | trCurrency:'₺' }}</h4>
+            <span>Toplam Harcama</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter and Search -->
+  <div class="filter-section">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label for="dateFilter" class="form-label">Tarih Aralığı</label>
+        <select
+          class="form-select"
+          id="dateFilter"
+          [ngModel]="dateFilter()"
+          (ngModelChange)="dateFilter.set($event); onFilterChange()"
+        >
+          <option value="all">Tüm Zamanlar</option>
+          <option value="30days">Son 30 Gün</option>
+          <option value="3months">Son 3 Ay</option>
+          <option value="6months">Son 6 Ay</option>
+          <option value="1year">Son 1 Yıl</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label for="statusFilter" class="form-label">Durum</label>
+        <select
+          class="form-select"
+          id="statusFilter"
+          [ngModel]="statusFilter()"
+          (ngModelChange)="statusFilter.set($event); onFilterChange()"
+        >
+          <option value="all">Tüm Durumlar</option>
+          <option value="active">Aktif / Bekleyen</option>
+          <option value="completed">Tamamlandı</option>
+          <option value="cancelled">İptal Edildi</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label for="searchRental" class="form-label">Ara</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            id="searchRental"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event); onFilterChange()"
+            placeholder="Araç modeli, rezervasyon no..."
+          />
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <button
+          type="button"
+          class="btn btn-outline-secondary w-100"
+          (click)="resetFilters()"
+        >
+          <i class="bi bi-arrow-clockwise me-1"></i>Temizle
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+  <p class="text-center text-muted py-5">Kiralama geçmişi yükleniyor...</p>
+  } @else if (rentals().length === 0) {
+  <!-- Empty State -->
+  <div class="empty-state">
+    <div class="empty-icon">
+      <i class="bi bi-clock-history"></i>
+    </div>
+    <h4>Henüz kiralama geçmişin yok</h4>
+    <p class="text-muted">
+      İlk kiralama işlemini gerçekleştirdiğinde burada görünecek
+    </p>
+    <a routerLink="/" class="btn btn-primary">
+      <i class="bi bi-plus-circle me-1"></i>İlk Rezervasyonunu Yap
+    </a>
+  </div>
+  } @else if (filteredRentals().length === 0) {
+  <div class="empty-state">
+    <div class="empty-icon">
+      <i class="bi bi-search"></i>
+    </div>
+    <h4>Filtreye uygun kiralama bulunamadı</h4>
+    <p class="text-muted">
+      Farklı filtre seçenekleri deneyebilir veya aramayı temizleyebilirsin
+    </p>
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="resetFilters()"
+    >
+      Filtreleri Temizle
+    </button>
+  </div>
+  } @else {
+  <!-- Rental History List -->
+  <div class="rental-history-list">
+    @for (rental of paginatedRentals(); track rental.id) {
+    <div
+      class="rental-item"
+      [class.active-rental]="isActiveRental(rental.status)"
+    >
+      <div class="rental-badge">
+        <span class="badge" [class]="getStatusBadgeClass(rental.status)">
+          {{ getStatusLabel(rental.status) }}
+        </span>
+      </div>
+
+      <div class="row g-0">
+        <div class="col-md-3">
+          <div class="rental-image">
+            <img
+              [src]="getVehicleImage(rental.vehicleImageUrl)"
+              [alt]="rental.vehicleBrand + ' ' + rental.vehicleModel"
+              class="img-fluid"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="rental-details">
+            <h5 class="rental-title">
+              {{ rental.vehicleBrand }} {{ rental.vehicleModel }}
+            </h5>
+            <div class="rental-info">
+              <div class="info-row">
+                <i class="bi bi-calendar3 text-primary"></i>
+                <span>
+                  {{ rental.pickUpDate | date:'dd MMMM y' }} - {{
+                  rental.deliveryDate | date:'dd MMMM y' }}
+                </span>
+              </div>
+              <div class="info-row">
+                <i class="bi bi-geo-alt text-primary"></i>
+                <span>{{ rental.pickUpLocationName }}</span>
+              </div>
+              <div class="info-row">
+                <i class="bi bi-hash text-primary"></i>
+                <span>Rezervasyon: {{ rental.reservationNumber }}</span>
+              </div>
+            </div>
+            <div class="rental-features">
+              <span class="feature-tag">{{ rental.vehicleTransmission }}</span>
+              <span class="feature-tag">{{ rental.vehicleFuelType }}</span>
+              <span class="feature-tag"
+                >{{ rental.vehicleSeatCount }} Kişi</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="rental-actions">
+            <div class="rental-price">
+              <span
+                class="price-amount"
+                [class.cancelled]="isCancelledRental(rental.status)"
+              >
+                {{ rental.total | trCurrency:'₺' }}
+              </span>
+              <span class="price-period">{{ rental.totalDay }} gün</span>
+            </div>
+            <div class="action-buttons">
+              <a
+                [routerLink]="['/profile/rentals', rental.id]"
+                class="btn btn-primary btn-sm w-100 mb-2"
+              >
+                <i class="bi bi-eye me-1"></i>Detayları Gör
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  @if (totalPages() > 1) {
+  <div class="pagination-section">
+    <nav aria-label="Kiralama geçmişi sayfalama">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button
+            type="button"
+            class="page-link"
+            (click)="goToPage(currentPage() - 1)"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+
+        @for (page of pages(); track page) {
+        <li class="page-item" [class.active]="currentPage() === page">
+          <button type="button" class="page-link" (click)="goToPage(page)">
+            {{ page }}
+          </button>
+        </li>
+        }
+
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button
+            type="button"
+            class="page-link"
+            (click)="goToPage(currentPage() + 1)"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="pagination-info text-center mt-3">
+      <small class="text-muted">
+        Toplam {{ rangeInfo().total }} kiralama içinden {{ rangeInfo().start
+        }}-{{ rangeInfo().end }} arası gösteriliyor
+      </small>
+    </div>
+  </div>
+  } }
+</div>
