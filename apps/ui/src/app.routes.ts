@@ -25,6 +25,14 @@ export const appRoutes: Route[] = [
         path: 'profile',
         loadChildren: () => import('./pages/profile/router'),
       },
+      {
+        path: 'info',
+        loadChildren: () => import('./pages/static/router'),
+      },
+      {
+        path: '**',
+        loadComponent: () => import('./pages/not-found/not-found')
+      }
     ],
   },
 ];

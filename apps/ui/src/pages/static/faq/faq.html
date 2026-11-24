@@ -1,0 +1,53 @@
+<section class="info-page-header">
+  <div class="container">
+    <nav class="info-page-breadcrumb">
+      <a routerLink="/">Ana Sayfa</a>
+      <i class="bi bi-chevron-right"></i>
+      <span>Sık Sorulan Sorular</span>
+    </nav>
+    <h1 class="info-page-title">
+      <i class="bi bi-question-circle"></i>
+      Sık Sorulan Sorular
+    </h1>
+  </div>
+</section>
+
+<section class="info-page-body">
+  <div class="container">
+    <div class="info-page-card">
+      @for (category of categories; track category.title) {
+      <div class="faq-category">
+        <h2 class="faq-category-title">
+          <i class="bi" [class]="category.icon"></i>
+          {{ category.title }}
+        </h2>
+
+        @for (item of category.items; track item.question) {
+        <div
+          class="faq-item"
+          [class.faq-open]="openQuestion() === item.question"
+        >
+          <button
+            type="button"
+            class="faq-question"
+            (click)="toggle(item.question)"
+          >
+            <span>{{ item.question }}</span>
+            <i
+              class="bi"
+              [class]="openQuestion() === item.question ? 'bi-dash-lg' : 'bi-plus-lg'"
+            ></i>
+          </button>
+
+          @if (openQuestion() === item.question) {
+          <div class="faq-answer">
+            <p>{{ item.answer }}</p>
+          </div>
+          }
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</section>

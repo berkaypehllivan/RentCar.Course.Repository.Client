@@ -128,19 +128,33 @@
       <div class="col-lg-2">
         <h6 class="mb-3">Hızlı Bağlantılar</h6>
         <ul class="list-unstyled">
-          <li><a href="#" class="text-muted">Ana Sayfa</a></li>
-          <li><a href="#" class="text-muted">Araç Kiralama</a></li>
-          <li><a href="#" class="text-muted">Hakkımızda</a></li>
-          <li><a href="#" class="text-muted">İletişim</a></li>
+          <li><a routerLink="/" class="text-muted">Ana Sayfa</a></li>
+          <li><a routerLink="/" class="text-muted">Araç Kiralama</a></li>
+          <li><a routerLink="/about" class="text-muted">Hakkımızda</a></li>
+          <li><a routerLink="/contact" class="text-muted">İletişim</a></li>
         </ul>
       </div>
       <div class="col-lg-3">
-        <h6 class="mb-3">Hizmetler</h6>
+        <h6 class="mb-3">Yardım ve Yasal</h6>
         <ul class="list-unstyled">
-          <li><a href="#" class="text-muted">Günlük Kiralama</a></li>
-          <li><a href="#" class="text-muted">Aylık Kiralama</a></li>
-          <li><a href="#" class="text-muted">Kurumsal Çözümler</a></li>
-          <li><a href="#" class="text-muted">Güvence Paketleri</a></li>
+          <li>
+            <a routerLink="/info/faq" class="text-muted">Sık Sorulan Sorular</a>
+          </li>
+          <li>
+            <a routerLink="/info/rental-terms" class="text-muted"
+              >Kiralama Koşulları</a
+            >
+          </li>
+          <li>
+            <a routerLink="/info/privacy-policy" class="text-muted"
+              >KVKK ve Gizlilik</a
+            >
+          </li>
+          <li>
+            <a routerLink="/info/terms-of-use" class="text-muted"
+              >Kullanım Şartları</a
+            >
+          </li>
         </ul>
       </div>
       <div class="col-lg-3">
@@ -148,7 +162,7 @@
         <ul class="list-unstyled text-muted">
           <li><i class="bi bi-telephone"></i> +90 352 123 45 67</li>
           <li><i class="bi bi-envelope"></i> info@rentcar.com</li>
-          <li><i class="bi bi-geo-alt"></i> Kayseri, Türkiye</li>
+          <li><i class="bi bi-geo-alt"></i> Manisa, Türkiye</li>
         </ul>
       </div>
     </div>
@@ -156,12 +170,16 @@
     <div class="row align-items-center">
       <div class="col-md-6">
         <p class="text-muted mb-0">
-          &copy; 2025 RentCar. Tüm hakları saklıdır.
+          &copy; 2026 RentCar. Tüm hakları saklıdır.
         </p>
       </div>
       <div class="col-md-6 text-md-end">
-        <a href="#" class="text-muted me-3">Gizlilik Politikası</a>
-        <a href="#" class="text-muted">Kullanım Şartları</a>
+        <a routerLink="/info/privacy-policy" class="text-muted me-3"
+          >Gizlilik Politikası</a
+        >
+        <a routerLink="/info/terms-of-use" class="text-muted"
+          >Kullanım Şartları</a
+        >
       </div>
     </div>
   </div>

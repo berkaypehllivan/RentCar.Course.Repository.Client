@@ -1,0 +1,39 @@
+<section class="info-page-header">
+  <div class="container">
+    <nav class="info-page-breadcrumb">
+      <a routerLink="/">Ana Sayfa</a>
+      <i class="bi bi-chevron-right"></i>
+      <span>{{ content.title }}</span>
+    </nav>
+    <h1 class="info-page-title">
+      <i class="bi" [class]="content.icon"></i>
+      {{ content.title }}
+    </h1>
+  </div>
+</section>
+
+<section class="info-page-body">
+  <div class="container">
+    <div class="info-page-card">
+      <p class="info-page-updated">Son güncelleme: {{ content.updatedAt }}</p>
+
+      @for (section of content.sections; track section.title) {
+      <article class="info-page-section">
+        <h2>{{ section.title }}</h2>
+
+        @for (paragraph of section.paragraphs ?? []; track $index) {
+        <p>{{ paragraph }}</p>
+        }
+
+        @if (section.items?.length) {
+        <ul>
+          @for (item of section.items; track $index) {
+          <li>{{ item }}</li>
+          }
+        </ul>
+        }
+      </article>
+      }
+    </div>
+  </div>
+</section>
